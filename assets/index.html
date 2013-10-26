@@ -40,6 +40,18 @@
     var viewport;
     var loader;
 
+    var plane = {};
+
+    var Entity = function Entity() {};
+    Entity.prototype.setVelocity = function (newVelocity) {
+        this._velocity = newVelocity;
+    };
+
+    Entity.prototype.update = function () {
+        this.asset.x = this.asset.x + this._velocity.x;
+        this.asset.y = this.asset.y + this._velocity.y;
+    };
+
     var setupGame = function(stage) {
         canvas = stage.canvas;
 
@@ -57,13 +69,35 @@
 
     var loadAssets = function(handleComplete) {
         var manifest = [{
-            src: 'images/plane1.png',
-            id: 'plane1'
+            src: 'images/plane2small.png',
+            id: 'plane'
         }];
 
         loader = new createjs.LoadQueue(false);
         loader.addEventListener('complete', handleComplete);
         loader.loadManifest(manifest);
+    };
+
+    var createPlane = function () {
+        var plane = new Entity();
+
+        var asset = plane.asset = new createjs.Bitmap(loader.getResult('plane'));
+        asset.setTransform(viewport.dimensions.x - 100, 90, 0.8, 0.8);
+
+        stage.addChild(asset);
+
+        plane.setVelocity({
+            x: -1,
+            y: 0
+        });
+
+        return plane;
+    };
+
+    var onTick = function (event) {
+        plane.update();
+
+        stage.update(event);
     };
 
     function init() {
@@ -76,7 +110,11 @@
             square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
             stage.addChild(square);
-            stage.update();
+
+            plane = createPlane();
+
+            createjs.Ticker.timingMode = createjs.Ticker.RAF;
+            createjs.Ticker.addEventListener('tick', onTick);
         });
     }
     </script>
