@@ -13,6 +13,9 @@ var planes = [];
 var ground = {};
 var entities = [];
 
+
+var scale = 1;
+
 var groundLevel = 0;
 
 var Vector = function Vector(x, y) {
@@ -129,7 +132,7 @@ var createPlane = function() {
     var plane = new Entity();
 
     var asset = plane.asset = new createjs.Bitmap(loader.getResult('plane'));
-    asset.setTransform(0, 0, 0.2, 0.2);
+    asset.setTransform(0, 0, scale, scale);
 
     stage.addChild(asset);
 
@@ -154,10 +157,11 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
-    groundLevel = viewport.dimensions.y - (groundImage.height * 0.8);
+    groundLevel = viewport.dimensions.y - (groundImage.height * scale);
 
     var asset = ground.asset = new createjs.Shape();
     asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
+    asset.setTransform(0, 0, scale, scale);
 
     ground.setDimensions(new Vector(groundImage.width, groundImage.height));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
@@ -186,7 +190,7 @@ var createAvatar = function () {
     });
 
     avatar.asset = new createjs.Sprite(data, "run");
-    avatar.asset.setTransform(0, 0, 0.8, 0.8);
+    avatar.asset.setTransform(0, 0, scale, scale);
     avatar.asset.framerate = fpsHandler.fps;
 
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
