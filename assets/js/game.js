@@ -27,10 +27,7 @@ Vector.prototype.cap = function(capTo) {
 };
 
 Vector.prototype.multiply = function(by) {
-    this.x = this.x * by;
-    this.y = this.y * by;
-
-    return this;
+    return new Vector(this.x * by, this.y * by);
 };
 
 var Entity = function Entity() {
