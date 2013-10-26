@@ -37,6 +37,7 @@
     var loader;
     var canvas;
     var viewport;
+    var loader;
 
     var setupGame = function(stage) {
         canvas = stage.canvas;
@@ -53,16 +54,29 @@
         canvas.height = viewport.dimensions.y - 5;
     };
 
+    var loadAssets = function(handleComplete) {
+        var manifest = [{
+            src: 'images/plane1.png',
+            id: 'plane1'
+        }];
+
+        loader = new createjs.LoadQueue(false);
+        loader.addEventListener('complete', handleComplete);
+        loader.loadManifest(manifest);
+    };
+
     function init() {
         stage = new createjs.Stage("travelatorCanvas");
         setupGame(stage);
 
-        var square = new createjs.Shape();
+        loadAssets(function() {
+            var square = new createjs.Shape();
 
-        square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
+            square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
-        stage.addChild(square);
-        stage.update();
+            stage.addChild(square);
+            stage.update();
+        });
     }
     </script>
 </head>
