@@ -1,4 +1,3 @@
-
 var stage;
 var loader;
 var canvas;
@@ -26,10 +25,19 @@ Vector.prototype.cap = function(capTo) {
     return this;
 };
 
+Vector.prototype.multiply = function(by) {
+    this.x = this.x * by;
+    this.y = this.y * by;
+
+    return this;
+};
+
 var Entity = function Entity() {
     this._velocity = new Vector();
 
     this._acceleration = new Vector();
+
+    this._position = new Vector();
 };
 
 Entity.prototype.setVelocity = function(newVelocity) {
@@ -44,9 +52,19 @@ Entity.prototype.setAcceleration = function(newAcceleration) {
     this._acceleration = newAcceleration;
 };
 
+Entity.prototype.setPosition = function (newPosition) {
+    this._position = newPosition;
+};
+
 Entity.prototype.update = function() {
-    this.asset.x = this.asset.x + (this._velocity.x * fpsHandler.frameComplete);
-    this.asset.y = this.asset.y + (this._velocity.y * fpsHandler.frameComplete);
+    if (this._velocity.x > 0) {
+        console.log(this._velocity);
+    }
+
+    this._position.add(this._velocity.multiply(fpsHandler.frameComplete));
+
+    this.asset.x = this._position.x;
+    this.asset.y = this._position.y;
 
     this._velocity.add(this._acceleration).cap(this._maxVelocity);
 };
@@ -81,9 +99,11 @@ var createPlane = function() {
     var plane = new Entity();
 
     var asset = plane.asset = new createjs.Bitmap(loader.getResult('plane'));
-    asset.setTransform(viewport.dimensions.x - 100, viewport.dimensions.y, 0.2, 0.2);
+    asset.setTransform(0, 0, 0.2, 0.2);
 
     stage.addChild(asset);
+
+    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y))
 
     plane.setVelocity(new Vector(-0.3, -0.1));
     plane.setMaxVelocity(new Vector(-20, -5))
@@ -93,18 +113,23 @@ var createPlane = function() {
 };
 
 var fpsHandler = {
-    fps: 1,
+    fps: 30,
     lastRender: 0,
-    shouldUpdate: function(event) {
+    calculateChange: function(event) {
         if (!this.numTicks) {
             this.numTicks = 1000 / this.fps;
-            this.perTickPercent = 100 / this.numTicks;
         }
 
         var currentTick = createjs.Ticker.getTime();
 
         var diff = currentTick - this.lastRender;
-        this.frameComplete = ((this.perTickPercent * diff) / 100) - this.frameComplete;
+
+        this.frameComplete = (diff - this.lastDiff) / this.numTicks;
+        if (this.frameComplete < 0) {
+            this.frameComplete = 1 + this.frameComplete;
+        }
+
+        this.lastDiff = diff;
 
         if (diff > this.numTicks) {
             this.lastRender = currentTick;
@@ -114,11 +139,12 @@ var fpsHandler = {
 
         return false;
     },
-    frameComplete: 0
+    frameComplete: 0,
+    lastDiff: 0
 };
 
 var onTick = function(event) {
-    var shouldUpdate = fpsHandler.shouldUpdate();
+    fpsHandler.calculateChange();
     plane.update();
 
     stage.update(event);
