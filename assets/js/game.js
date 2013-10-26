@@ -224,7 +224,7 @@ function createBackground() {
     asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width, backgroundImage.height);
 
     background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
-    background.setPosition(new Vector(0, groundLevel - backgroundImage.height - 16));
+    background.setPosition(new Vector(0, groundLevel - backgroundImage.height ));
     background.setVelocity(new Vector(-4, 0));
     background.startScrolling();
 
