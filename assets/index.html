@@ -47,14 +47,14 @@
         this.y = y || 0;
     };
 
-    Vector.prototype.add = function (otherVector) {
+    Vector.prototype.add = function(otherVector) {
         this.x += otherVector.x || 0;
         this.y += otherVector.y || 0;
 
         return this;
     };
 
-    Vector.prototype.cap = function (capTo) {
+    Vector.prototype.cap = function(capTo) {
         this.x = this.x > capTo.x ? capTo.x : this.x;
         this.y = this.y > capTo.y ? capTo.y : this.y;
 
@@ -67,21 +67,21 @@
         this._acceleration = new Vector();
     };
 
-    Entity.prototype.setVelocity = function (newVelocity) {
+    Entity.prototype.setVelocity = function(newVelocity) {
         this._velocity = newVelocity;
     };
 
-    Entity.prototype.setMaxVelocity = function (maxVelocity) {
+    Entity.prototype.setMaxVelocity = function(maxVelocity) {
         this._maxVelocity = maxVelocity;
     };
 
-    Entity.prototype.setAcceleration = function (newAcceleration) {
+    Entity.prototype.setAcceleration = function(newAcceleration) {
         this._acceleration = newAcceleration;
     };
 
-    Entity.prototype.update = function () {
-        this.asset.x = this.asset.x + this._velocity.x;
-        this.asset.y = this.asset.y + this._velocity.y;
+    Entity.prototype.update = function() {
+        this.asset.x = this.asset.x + (this._velocity.x * fpsHandler.frameComplete);
+        this.asset.y = this.asset.y + (this._velocity.y * fpsHandler.frameComplete);
 
         this._velocity.add(this._acceleration).cap(this._maxVelocity);
     };
@@ -112,7 +112,7 @@
         loader.loadManifest(manifest);
     };
 
-    var createPlane = function () {
+    var createPlane = function() {
         var plane = new Entity();
 
         var asset = plane.asset = new createjs.Bitmap(loader.getResult('plane'));
@@ -120,14 +120,40 @@
 
         stage.addChild(asset);
 
-        plane.setVelocity(new Vector(-3, -1));
+        plane.setVelocity(new Vector(-0.3, -0.1));
         plane.setMaxVelocity(new Vector(-20, -5))
-        plane.setAcceleration(new Vector(-0.2, -0.2));
+        plane.setAcceleration(new Vector(-0.002, -0.002));
 
         return plane;
     };
 
-    var onTick = function (event) {
+    var fpsHandler = {
+        fps: 1,
+        lastRender: 0,
+        shouldUpdate: function(event) {
+            if (!this.numTicks) {
+                this.numTicks = 1000 / this.fps;
+                this.perTickPercent = 100 / this.numTicks;
+            }
+
+            var currentTick = createjs.Ticker.getTime();
+
+            var diff = currentTick - this.lastRender;
+            this.frameComplete = (this.perTickPercent * diff) / 100;
+
+            if (diff > this.numTicks) {
+                this.lastRender = currentTick;
+
+                return true;
+            }
+
+            return false;
+        },
+        frameComplete: 0
+    };
+
+    var onTick = function(event) {
+        var shouldUpdate = fpsHandler.shouldUpdate();
         plane.update();
 
         stage.update(event);
