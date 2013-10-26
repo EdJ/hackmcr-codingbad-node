@@ -4,12 +4,69 @@
 <head>
     <title>Travelator</title>
     <link href="css/travelator.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/createjs/events/Event.js"></script>
+    <script type="text/javascript" src="js/createjs/events/EventDispatcher.js"></script>
+    <script type="text/javascript" src="js/createjs/utils/IndexOf.js"></script>
+    <script type="text/javascript" src="js/easeljs/utils/UID.js"></script>
+    <script type="text/javascript" src="js/easeljs/utils/Ticker.js"></script>
+    <script type="text/javascript" src="js/easeljs/geom/Matrix2D.js"></script>
+    <script type="text/javascript" src="js/easeljs/geom/Point.js"></script>
+    <script type="text/javascript" src="js/easeljs/geom/Rectangle.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Shadow.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/SpriteSheet.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Graphics.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/DisplayObject.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Container.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Stage.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Bitmap.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Sprite.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/BitmapAnimation.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/BitmapText.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Shape.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/Text.js"></script>
+    <script type="text/javascript" src="js/easeljs/display/DOMElement.js"></script>
+    <script type="text/javascript" src="js/easeljs/events/MouseEvent.js"></script>
+    <script type="text/javascript" src="js/easeljs/filters/Filter.js"></script>
+    <script type="text/javascript" src="js/easeljs/ui/ButtonHelper.js"></script>
+    <script type="text/javascript" src="js/easeljs/ui/Touch.js"></script>
+    <script type="text/javascript" src="js/easeljs/utils/SpriteSheetUtils.js"></script>
+    <script type="text/javascript" src="js/easeljs/utils/SpriteSheetBuilder.js"></script>
+
+    <script type="text/javascript">
+    var stage, stageWidth, stageHeight, loader;
+    var canvas;
+
+    function init() {
+        stage = new createjs.Stage("travelatorCanvas");
+        canvas = stage.canvas;
+
+        canvas = document.getElementById("travelatorCanvas");
+        stageWidth = document.body.clientWidth; //document.width is obsolete
+        stageHeight = document.body.clientHeight; //document.height is obsolete
+
+
+        canvas.width = stageWidth
+        canvas.height = stageHeight
+
+        var square = new createjs.Shape();
+
+        square.graphics.beginFill("#000000").drawRect(0, 0, stageWidth, stageHeight);
+
+        stage.addChild(square);
+        stage.update();
+
+        console.log(stageWidth, stageHeight);
+
+    }
+    </script>
 </head>
 
-<body>
+<body onload="init();">
+
+
     <div>
         Make the game here
-        <canvas id="testCanvas" width="960" height="400"></canvas>
+        <canvas id="travelatorCanvas"></canvas>
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
