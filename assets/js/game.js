@@ -76,7 +76,7 @@ Entity.prototype.startScrolling = function () {
         this._oldUpdate();
 
         if (this._position.x < -this._dimensions.x) {
-            this.position.x += this._dimensions.x;
+            this._position.x += this._dimensions.x;
         }
     };
 };
@@ -136,11 +136,13 @@ var createGround = function() {
     var groundImage = loader.getResult("ground");
 
     var asset = ground.asset = new createjs.Shape();
-    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x, groundImage.height);
+    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
 
-    //asset.y = viewport.dimensions.y - groundImage.height;
+    ground.setDimensions(new Vector(groundImage.width, groundImage.height));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
-    ground.setVelocity(new Vector(-0.4, 0));
+    ground.setVelocity(new Vector(-4, 0));
+    ground.startScrolling();
+
     stage.addChild(asset);
 
     return ground;
