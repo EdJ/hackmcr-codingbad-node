@@ -80,10 +80,10 @@ Entity.prototype.update = function() {
     this._velocity.add(this._acceleration).cap(this._maxVelocity);
 };
 
-Entity.prototype.startScrolling = function () {
+Entity.prototype.startScrolling = function() {
     this._oldUpdate = this.update;
 
-    this.update = function () {
+    this.update = function() {
         this._oldUpdate();
 
         if (this._position.x < -this._dimensions.x) {
@@ -92,7 +92,7 @@ Entity.prototype.startScrolling = function () {
     };
 };
 
-Entity.prototype.stopScrolling = function () {
+Entity.prototype.stopScrolling = function() {
     this.update = this._oldUpdate;
 };
 
@@ -244,21 +244,21 @@ var onTick = function(event) {
     stage.update(event);
 };
 
-var attachInput = function (gameActions) {
+var attachInput = function(gameActions) {
     var mouseInput = function(gameActions) {
         stage.addEventListener('stagemousedown', gameActions.resetPlane);
     };
 
     var pressed = {};
 
-    var keyboardInput = function (gameActions) {
-        var handleInput = function () {
+    var keyboardInput = function(gameActions) {
+        var handleInput = function() {
             if (pressed[32]) {
                 gameActions.resetPlane();
             }
         };
 
-        document.onkeydown = function (e) {
+        document.onkeydown = function(e) {
             e = e || window.event;
 
             pressed[e.keyCode] = true;
@@ -266,7 +266,7 @@ var attachInput = function (gameActions) {
             handleInput();
         };
 
-        document.onkeyup = function (e) {
+        document.onkeyup = function(e) {
             e = e || window.event;
 
             pressed[e.keyCode] = false;
@@ -275,8 +275,8 @@ var attachInput = function (gameActions) {
         };
     };
 
-    var chimput = function (gameActions) {
-        createjs.Ticker.addEventListener('tick', function () {
+    var chimput = function(gameActions) {
+        createjs.Ticker.addEventListener('tick', function() {
             if (Math.random() > 0.99) {
                 gameActions.resetPlane();
             }
@@ -289,16 +289,57 @@ var attachInput = function (gameActions) {
 };
 
 var gameActions = {
-    resetPlane: function () {
-        var toReset = randomBetween(0, planes.length - 1);
-
-        planes[toReset].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+    resetPlane: function() {
+        plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
     }
 };
 
+var playerId;
+var socket;
+
+var connect = function() {
+    socket = io.connect('/');
+    socket.on('player', function(data) {
+        playerId = data.id;
+        console.log(JSON.stringify(data));
+    });
+};
+
+var gameOver = function(score) {
+    socket.emit('score', {
+        id: playerId,
+        score: score
+    });
+};
+
+var leaderboard = {
+    connect: connect,
+    gameOver: gameOver
+};
+
 function init() {
+
+    leaderboard.connect();
+
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
+
+    var leaderboardStage = new createjs.Stage("leaderBoard");
+
+    leaderboardStage.mouseEventsEnabled = true;
+    var rect = new createjs.Shape();
+    rect.graphics.beginFill("#ff0000").drawRect(0, 0, 200, 40);
+    leaderboardStage.addChild(rect);
+
+    rect.addEventListener("click", function() {
+        var playerScore = Math.floor((Math.random() * 1000));
+        leaderboard.gameOver(playerScore);
+    });
+    //Update stage will render next frame  
+
+    leaderboardStage.update();
+
+
 
     loadAssets(function() {
         var square = new createjs.Shape();
