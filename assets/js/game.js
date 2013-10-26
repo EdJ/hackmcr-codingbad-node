@@ -5,6 +5,7 @@ var viewport;
 var loader;
 
 var plane = {};
+var ground = {};
 
 var Vector = function Vector(x, y) {
     this.x = x || 0;
@@ -85,10 +86,11 @@ var setupGame = function(stage) {
 };
 
 var loadAssets = function(handleComplete) {
-    var manifest = [{
-        src: 'images/plane2small.png',
-        id: 'plane'
-    }];
+    var manifest = [
+        { src: 'images/plane2small.png', id: 'plane' },
+        { src: 'images/ground.png', id: 'ground' }
+
+    ];
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener('complete', handleComplete);
@@ -110,6 +112,19 @@ var createPlane = function() {
     plane.setAcceleration(new Vector(-0.002, -0.002));
 
     return plane;
+};
+
+var createGround = function() {
+    var ground = new Entity();
+    var groundAsset = ground.groundAsset = loader.getResult("ground");
+
+    var groundShape = new createjs.Shape();
+    groundShape.graphics.beginBitmapFill(groundAsset).drawRect(0, 0, viewport.dimensions.x, groundAsset.height);
+    groundShape.y = viewport.dimensions.y - groundAsset.height;
+
+    stage.addChild(groundShape);
+
+    return ground;
 };
 
 var fpsHandler = {
@@ -204,6 +219,8 @@ function init() {
         stage.addChild(square);
 
         plane = createPlane();
+
+        ground = createGround();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
