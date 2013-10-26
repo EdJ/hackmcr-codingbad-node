@@ -160,8 +160,16 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
         var socket = io.connect('/');
+        var playerScore = 20;
+        var playerId;
         socket.on('player', function(data) {
+            playerId = data.id;
             console.log(data);
+
+            socket.emit('score', {
+                id: playerId,
+                score: playerScore
+            });
         });
         </script>
     </div>
