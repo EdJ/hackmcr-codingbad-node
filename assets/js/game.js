@@ -13,6 +13,8 @@ var planes = [];
 var ground = {};
 var entities = [];
 
+var groundLevel = 0;
+
 var Vector = function Vector(x, y) {
     this.x = x || 0;
     this.y = y || 0;
@@ -113,6 +115,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/ground.png',
         id: 'ground'
+    }, {
+        src: 'images/bloke.png',
+        id: 'avatar'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -149,6 +154,8 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
+    groundLevel = viewport.dimensions.y - (groundImage.height * 0.8);
+
     var asset = ground.asset = new createjs.Shape();
     asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
 
@@ -162,6 +169,34 @@ var createGround = function() {
     entities.push(ground);
 
     return ground;
+};
+
+var createAvatar = function () {
+    var avatar = new Entity();
+    var avatarImage = {
+        width: 40,
+        height: 61
+    };
+
+    var data = new createjs.SpriteSheet({
+        "images": [loader.getResult("avatar")],
+        "frames": {"regX": 0, "height": avatarImage.height, "count": 16, "regY": 0, "width": avatarImage.width},
+        // define two animations, run (loops, 1.5x speed) and jump (returns to run):
+        "animations": {"run": [8, 11, "run", 1.5]}
+    });
+
+    avatar.asset = new createjs.Sprite(data, "run");
+    avatar.asset.setTransform(0, 0, 0.8, 0.8);
+    avatar.asset.framerate = fpsHandler.fps;
+
+    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
+    avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
+
+    stage.addChild(avatar.asset);
+
+    entities.push(avatar);
+
+    return avatar;
 };
 
 var fpsHandler = {
@@ -274,6 +309,8 @@ function init() {
         for (var i = numberOfPlanes; i--;) {
             createPlane();
         }
+
+        createAvatar();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
