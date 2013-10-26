@@ -32,6 +32,8 @@
     <script type="text/javascript" src="js/easeljs/ui/Touch.js"></script>
     <script type="text/javascript" src="js/easeljs/utils/SpriteSheetUtils.js"></script>
     <script type="text/javascript" src="js/easeljs/utils/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/leaderboard.js"></script>
 
     <script type="text/javascript">
     var stage;
@@ -183,21 +185,6 @@
     <div>
         <canvas id="travelatorCanvas"></canvas>
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-        var socket = io.connect('/');
-        var playerScore = 20;
-        var playerId;
-        socket.on('player', function(data) {
-            playerId = data.id;
-            console.log(JSON.stringify(data));
-
-            socket.emit('score', {
-                id: playerId,
-                score: playerScore
-            });
-        });
-        </script>
     </div>
 </body>
 
