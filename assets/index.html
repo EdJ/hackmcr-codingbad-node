@@ -43,11 +43,11 @@
     var plane = {};
 
     var Entity = function Entity() {};
-    Entity.prototype.setVelocity = function (newVelocity) {
+    Entity.prototype.setVelocity = function(newVelocity) {
         this._velocity = newVelocity;
     };
 
-    Entity.prototype.update = function () {
+    Entity.prototype.update = function() {
         this.asset.x = this.asset.x + this._velocity.x;
         this.asset.y = this.asset.y + this._velocity.y;
     };
@@ -78,7 +78,7 @@
         loader.loadManifest(manifest);
     };
 
-    var createPlane = function () {
+    var createPlane = function() {
         var plane = new Entity();
 
         var asset = plane.asset = new createjs.Bitmap(loader.getResult('plane'));
@@ -94,7 +94,7 @@
         return plane;
     };
 
-    var onTick = function (event) {
+    var onTick = function(event) {
         plane.update();
 
         stage.update(event);
@@ -131,7 +131,7 @@
         var playerId;
         socket.on('player', function(data) {
             playerId = data.id;
-            console.log(data);
+            console.log(JSON.stringify(data));
 
             socket.emit('score', {
                 id: playerId,
