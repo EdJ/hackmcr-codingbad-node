@@ -4,8 +4,14 @@ var canvas;
 var viewport;
 var loader;
 
+var randomBetween = function (from, to) {
+    return Math.floor(Math.random() * (to - from + 1) + from);
+};
+
 var plane = {};
+var planes = [];
 var ground = {};
+var entities = [];
 
 var Vector = function Vector(x, y) {
     this.x = x || 0;
@@ -122,11 +128,19 @@ var createPlane = function() {
 
     stage.addChild(asset);
 
-    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+    var x = randomBetween(1, viewport.dimensions.x);
+
+    plane.setPosition(new Vector(x, viewport.dimensions.y));
+
+    var xVel = randomBetween(-20, 20);
+    var yVel = randomBetween(-4, 4);
 
     plane.setVelocity(new Vector(-0.3, -0.1));
-    plane.setMaxVelocity(new Vector(-20, -5));
+    plane.setMaxVelocity(new Vector(xVel, yVel));
     plane.setAcceleration(new Vector(-0.002, -0.002));
+
+    planes.push(plane);
+    entities.push(plane);
 
     return plane;
 };
@@ -144,6 +158,8 @@ var createGround = function() {
     ground.startScrolling();
 
     stage.addChild(asset);
+
+    entities.push(ground);
 
     return ground;
 };
@@ -181,8 +197,10 @@ var fpsHandler = {
 
 var onTick = function(event) {
     fpsHandler.calculateChange();
-    plane.update();
-    ground.update();
+
+    for (var i = entities.length; i--;) {
+        entities[i].update();
+    }
 
     stage.update(event);
 };
@@ -233,7 +251,9 @@ var attachInput = function (gameActions) {
 
 var gameActions = {
     resetPlane: function () {
-        plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+        var toReset = randomBetween(0, planes.length - 1);
+
+        planes[toReset].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
     }
 };
 
@@ -249,7 +269,11 @@ function init() {
         stage.addChild(square);
         ground = createGround();
 
-        plane = createPlane();
+        var numberOfPlanes = randomBetween(1, 10);
+
+        for (var i = numberOfPlanes; i--;) {
+            createPlane();
+        }
 
         ground = createGround();
 
