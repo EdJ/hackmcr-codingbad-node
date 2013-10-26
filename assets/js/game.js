@@ -39,6 +39,7 @@ var Entity = function Entity() {
     this._acceleration = new Vector();
 
     this._position = new Vector();
+    this._maxVelocity = new Vector(100, 100);
 };
 
 Entity.prototype.setVelocity = function(newVelocity) {
@@ -53,15 +54,11 @@ Entity.prototype.setAcceleration = function(newAcceleration) {
     this._acceleration = newAcceleration;
 };
 
-Entity.prototype.setPosition = function (newPosition) {
+Entity.prototype.setPosition = function(newPosition) {
     this._position = newPosition;
 };
 
 Entity.prototype.update = function() {
-    if (this._velocity.x > 0) {
-        console.log(this._velocity);
-    }
-
     this._position.add(this._velocity.multiply(fpsHandler.frameComplete));
 
     this.asset.x = this._position.x;
@@ -86,9 +83,13 @@ var setupGame = function(stage) {
 };
 
 var loadAssets = function(handleComplete) {
-    var manifest = [
-        { src: 'images/plane2small.png', id: 'plane' },
-        { src: 'images/ground.png', id: 'ground' }
+    var manifest = [{
+            src: 'images/plane2small.png',
+            id: 'plane'
+        }, {
+            src: 'images/ground.png',
+            id: 'ground'
+        }
 
     ];
 
@@ -116,13 +117,15 @@ var createPlane = function() {
 
 var createGround = function() {
     var ground = new Entity();
-    var groundAsset = ground.groundAsset = loader.getResult("ground");
+    var groundImage = loader.getResult("ground");
 
-    var groundShape = new createjs.Shape();
-    groundShape.graphics.beginBitmapFill(groundAsset).drawRect(0, 0, viewport.dimensions.x, groundAsset.height);
-    groundShape.y = viewport.dimensions.y - groundAsset.height;
+    var asset = ground.asset = new createjs.Shape();
+    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x, groundImage.height);
 
-    stage.addChild(groundShape);
+    //asset.y = viewport.dimensions.y - groundImage.height;
+    ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
+    ground.setVelocity(new Vector(-0.4, 0));
+    stage.addChild(asset);
 
     return ground;
 };
@@ -161,6 +164,7 @@ var fpsHandler = {
 var onTick = function(event) {
     fpsHandler.calculateChange();
     plane.update();
+    ground.update();
 
     stage.update(event);
 };
