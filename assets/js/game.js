@@ -196,6 +196,14 @@ var attachInput = function (gameActions) {
         };
     };
 
+    var chimput = function (gameActions) {
+        createjs.Ticker.addEventListener('tick', function () {
+            if (Math.random() > 0.9) {
+                gameActions.resetPlane();
+            }
+        });
+    };
+
     mouseInput(gameActions);
     keyboardInput(gameActions);
 };
