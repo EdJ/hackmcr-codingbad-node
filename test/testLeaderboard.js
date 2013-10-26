@@ -10,6 +10,7 @@ describe('leaderboard', function() {
             done();
         });
     });
+    
     it('update leaderboard with player score', function(done) {
         var firstFire = true;
         leaderboard.connect(function(playerData) {
@@ -37,7 +38,7 @@ describe('leaderboard', function() {
             done();
         });
 
-        leaderboard.add_score({
+        leaderboard.addScore({
             id: 1,
             score: 20
         });

@@ -106,10 +106,10 @@ var createPlane = function() {
 
     stage.addChild(asset);
 
-    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y))
+    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
 
     plane.setVelocity(new Vector(-0.3, -0.1));
-    plane.setMaxVelocity(new Vector(-20, -5))
+    plane.setMaxVelocity(new Vector(-20, -5));
     plane.setAcceleration(new Vector(-0.002, -0.002));
 
     return plane;
@@ -131,7 +131,7 @@ var createGround = function() {
 };
 
 var fpsHandler = {
-    fps: 30,
+    fps: 10,
     lastRender: 0,
     calculateChange: function(event) {
         if (!this.numTicks) {
@@ -169,11 +169,61 @@ var onTick = function(event) {
     stage.update(event);
 };
 
+var attachInput = function (gameActions) {
+    var mouseInput = function(gameActions) {
+        stage.addEventListener('stagemousedown', gameActions.resetPlane);
+    };
+
+    var pressed = {};
+
+    var keyboardInput = function (gameActions) {
+        var handleInput = function () {
+            if (pressed[32]) {
+                gameActions.resetPlane();
+            }
+        };
+
+        document.onkeydown = function (e) {
+            e = e || window.event;
+
+            pressed[e.keyCode] = true;
+
+            handleInput();
+        };
+
+        document.onkeyup = function (e) {
+            e = e || window.event;
+
+            pressed[e.keyCode] = false;
+
+            handleInput();
+        };
+    };
+
+    var chimput = function (gameActions) {
+        createjs.Ticker.addEventListener('tick', function () {
+            if (Math.random() > 0.9) {
+                gameActions.resetPlane();
+            }
+        });
+    };
+
+    mouseInput(gameActions);
+    keyboardInput(gameActions);
+};
+
+var gameActions = {
+    resetPlane: function () {
+        plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+    }
+};
+
 function init() {
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
 
     loadAssets(function() {
+
         var square = new createjs.Shape();
 
         square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
@@ -185,6 +235,9 @@ function init() {
         ground = createGround();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
+
+        attachInput(gameActions);
+
         createjs.Ticker.addEventListener('tick', onTick);
     });
 }
