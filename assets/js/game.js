@@ -264,7 +264,7 @@ function init() {
     loadAssets(function() {
         var square = new createjs.Shape();
 
-        square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
+        square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
         ground = createGround();
@@ -274,8 +274,6 @@ function init() {
         for (var i = numberOfPlanes; i--;) {
             createPlane();
         }
-
-        ground = createGround();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
