@@ -33,28 +33,36 @@
     <script type="text/javascript" src="js/easeljs/utils/SpriteSheetBuilder.js"></script>
 
     <script type="text/javascript">
-    var stage, stageWidth, stageHeight, loader;
+    var stage;
+    var loader;
     var canvas;
+    var viewport;
 
-    function init() {
-        stage = new createjs.Stage("travelatorCanvas");
+    var setupGame = function(stage) {
         canvas = stage.canvas;
 
         canvas = document.getElementById("travelatorCanvas");
-        stageWidth = window.innerWidth; //document.width is obsolete
-        stageHeight = window.innerHeight; //document.height is obsolete
+        viewport = {
+            dimensions: {
+                x: window.innerWidth,
+                y: window.innerHeight
+            }
+        };
 
-        canvas.width = stageWidth - 5;
-        canvas.height = stageHeight - 5;
+        canvas.width = viewport.dimensions.x - 5;
+        canvas.height = viewport.dimensions.y - 5;
+    };
+
+    function init() {
+        stage = new createjs.Stage("travelatorCanvas");
+        setupGame(stage);
 
         var square = new createjs.Shape();
 
-        square.graphics.beginFill("#000000").drawRect(0, 0, stageWidth, stageHeight);
+        square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
         stage.update();
-
-        console.log(stageWidth, stageHeight);
     }
     </script>
 </head>
