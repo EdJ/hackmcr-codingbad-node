@@ -1,6 +1,13 @@
 language: node_js
 node_js:
-  - "0.11"
-  - "0.10"
-  - "0.8"
-  - "0.6"
+- '0.11'
+- '0.10'
+- '0.8'
+- '0.6'
+deploy:
+  provider: heroku
+  api_key:
+    secure: VXgOsJsVKGv+fwcBH6UtuAamSMGQFkM4r1Lll6+EXZ9MGgu2Oo2EXJ2y+d9H36b2mS6JZdueAFA8W1gq+nMod62WwqU18KG75xb58GBZSrWW+nmIbARSN3FdWSdms5UJradQzbZm1IDrbz6uMrRCJ/8XlSynr3hynXvAwYxG7ho=
+  app: travelator
+  on:
+    repo: EdJ/hackmcr-codingbad-node
