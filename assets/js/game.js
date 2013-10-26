@@ -105,10 +105,10 @@ var createPlane = function() {
 
     stage.addChild(asset);
 
-    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y))
+    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
 
     plane.setVelocity(new Vector(-0.3, -0.1));
-    plane.setMaxVelocity(new Vector(-20, -5))
+    plane.setMaxVelocity(new Vector(-20, -5));
     plane.setAcceleration(new Vector(-0.002, -0.002));
 
     return plane;
