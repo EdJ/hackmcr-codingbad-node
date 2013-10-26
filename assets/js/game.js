@@ -285,15 +285,8 @@ var attachInput = function(gameActions) {
 };
 
 var gameActions = {
-<<<<<<< HEAD
     resetPlane: function() {
         plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
-=======
-    resetPlane: function () {
-        var toReset = randomBetween(0, planes.length - 1);
-
-        planes[toReset].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
->>>>>>> 34e0ee18e0a4707c35f796225370e4031d2e2594
     }
 };
 
