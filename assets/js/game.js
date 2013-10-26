@@ -40,6 +40,7 @@ var Entity = function Entity() {
 
     this._position = new Vector();
     this._maxVelocity = new Vector(100, 100);
+    this._dimensions = new Vector();
 };
 
 Entity.prototype.setVelocity = function(newVelocity) {
@@ -56,6 +57,10 @@ Entity.prototype.setAcceleration = function(newAcceleration) {
 
 Entity.prototype.setPosition = function(newPosition) {
     this._position = newPosition;
+};
+
+Entity.prototype.setDimensions = function(newDimensions) {
+    this._dimensions = newDimensions;
 };
 
 Entity.prototype.update = function() {
@@ -233,6 +238,7 @@ function init() {
         plane = createPlane();
 
         ground = createGround();
+        conzole.wat
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
