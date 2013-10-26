@@ -4,7 +4,7 @@ var canvas;
 var viewport;
 var loader;
 
-var randomBetween = function (from, to) {
+var randomBetween = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
 };
 
@@ -118,6 +118,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/bloke.png',
         id: 'avatar'
+    }, {
+        src: 'images/background.png',
+        id: 'background'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -171,7 +174,7 @@ var createGround = function() {
     return ground;
 };
 
-var createAvatar = function () {
+var createAvatar = function() {
     var avatar = new Entity();
     var avatarImage = {
         width: 40,
@@ -180,9 +183,17 @@ var createAvatar = function () {
 
     var data = new createjs.SpriteSheet({
         "images": [loader.getResult("avatar")],
-        "frames": {"regX": 0, "height": avatarImage.height, "count": 16, "regY": 0, "width": avatarImage.width},
+        "frames": {
+            "regX": 0,
+            "height": avatarImage.height,
+            "count": 16,
+            "regY": 0,
+            "width": avatarImage.width
+        },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
-        "animations": {"run": [8, 11, "run", 1.5]}
+        "animations": {
+            "run": [8, 11, "run", 1.5]
+        }
     });
 
     avatar.asset = new createjs.Sprite(data, "run");
@@ -197,6 +208,27 @@ var createAvatar = function () {
     entities.push(avatar);
 
     return avatar;
+};
+
+
+function createBackground() {
+
+    var background = new Entity();
+    var backgroundImage = loader.getResult("background");
+
+    var asset = background.asset = new createjs.Shape();
+    asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width, backgroundImage.height);
+
+    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
+    background.setPosition(new Vector(0, groundLevel - backgroundImage.height - 16));
+    background.setVelocity(new Vector(-4, 0));
+    background.startScrolling();
+
+    stage.addChild(asset);
+
+    entities.push(background);
+
+    return background;
 };
 
 var fpsHandler = {
@@ -343,7 +375,7 @@ function init() {
         square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
-        ground = createGround();
+
 
         var numberOfPlanes = randomBetween(1, 10);
 
@@ -351,6 +383,9 @@ function init() {
             createPlane();
         }
 
+        ground = createGround();
+        background = createBackground();
+        
         createAvatar();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
