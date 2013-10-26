@@ -42,5 +42,47 @@ describe('leaderboard', function() {
             id: 1,
             score: 20
         });
-    })
+    });
+
+    it('leaderboard should remain sorted', function() {
+        leaderboard.connect(function(playerData) {
+            var hadItem = false;
+            var lastScore = Number.MAX_VALUE;
+            for (var i = playerData.leaderBoard.length; i--;) {
+                var value = playerData.leaderBoard[i].score;
+
+                value.should.be.at.most(lastScore);
+                lastScore = value;
+
+                hadItem = true;
+            }
+
+            hadItem.should.equal(true);
+        });
+        
+        leaderboard.addScore({
+            id: 1,
+            score: 20
+        });
+        
+        leaderboard.addScore({
+            id: 1,
+            score: 30
+        });
+        
+        leaderboard.addScore({
+            id: 1,
+            score: 10
+        });
+        
+        leaderboard.addScore({
+            id: 1,
+            score: 50
+        });
+        
+        leaderboard.addScore({
+            id: 1,
+            score: 5
+        });
+    });
 });
