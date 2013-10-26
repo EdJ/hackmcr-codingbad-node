@@ -41,12 +41,11 @@
         canvas = stage.canvas;
 
         canvas = document.getElementById("travelatorCanvas");
-        stageWidth = document.body.clientWidth; //document.width is obsolete
-        stageHeight = document.body.clientHeight; //document.height is obsolete
+        stageWidth = window.innerWidth; //document.width is obsolete
+        stageHeight = window.innerHeight; //document.height is obsolete
 
-
-        canvas.width = stageWidth
-        canvas.height = stageHeight
+        canvas.width = stageWidth - 5;
+        canvas.height = stageHeight - 5;
 
         var square = new createjs.Shape();
 
@@ -56,16 +55,12 @@
         stage.update();
 
         console.log(stageWidth, stageHeight);
-
     }
     </script>
 </head>
 
 <body onload="init();">
-
-
     <div>
-        Make the game here
         <canvas id="travelatorCanvas"></canvas>
 
         <script src="/socket.io/socket.io.js"></script>
