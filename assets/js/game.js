@@ -199,7 +199,7 @@ var attachInput = function (gameActions) {
 
     var chimput = function (gameActions) {
         createjs.Ticker.addEventListener('tick', function () {
-            if (Math.random() > 0.9) {
+            if (Math.random() > 0.99) {
                 gameActions.resetPlane();
             }
         });
@@ -207,6 +207,7 @@ var attachInput = function (gameActions) {
 
     mouseInput(gameActions);
     keyboardInput(gameActions);
+    chimput(gameActions);
 };
 
 var gameActions = {
@@ -220,16 +221,15 @@ function init() {
     setupGame(stage);
 
     loadAssets(function() {
-
         var square = new createjs.Shape();
 
         square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
+        ground = createGround();
 
         plane = createPlane();
 
-        ground = createGround();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
