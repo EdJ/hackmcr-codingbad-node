@@ -64,6 +64,22 @@ Entity.prototype.update = function() {
     this._velocity.add(this._acceleration).cap(this._maxVelocity);
 };
 
+Entity.prototype.startScrolling = function () {
+    this._oldUpdate = this.update;
+
+    this.update = function () {
+        this._oldUpdate();
+
+        if (this._position.x < -this._dimensions.x) {
+            this.position.x += this._dimensions.x;
+        }
+    };
+};
+
+Entity.prototype.stopScrolling = function () {
+    this.update = this._oldUpdate;
+};
+
 var setupGame = function(stage) {
     canvas = stage.canvas;
 
@@ -81,14 +97,12 @@ var setupGame = function(stage) {
 
 var loadAssets = function(handleComplete) {
     var manifest = [{
-            src: 'images/plane2small.png',
-            id: 'plane'
-        }, {
-            src: 'images/ground.png',
-            id: 'ground'
-        }
-
-    ];
+        src: 'images/plane2small.png',
+        id: 'plane'
+    }, {
+        src: 'images/ground.png',
+        id: 'ground'
+    }];
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener('complete', handleComplete);
