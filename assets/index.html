@@ -139,7 +139,7 @@
             var currentTick = createjs.Ticker.getTime();
 
             var diff = currentTick - this.lastRender;
-            this.frameComplete = (this.perTickPercent * diff) / 100;
+            this.frameComplete = ((this.perTickPercent * diff) / 100) - this.frameComplete;
 
             if (diff > this.numTicks) {
                 this.lastRender = currentTick;
