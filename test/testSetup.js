@@ -1,5 +1,5 @@
 require('chai').should();
 
-describe('test failed', function () {
-	false.should.be.true;
+describe('test success', function () {
+	true.should.be.true;
 });
