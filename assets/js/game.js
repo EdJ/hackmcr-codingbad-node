@@ -4,8 +4,16 @@ var canvas;
 var viewport;
 var loader;
 
+var randomBetween = function (from, to) {
+    return Math.floor(Math.random() * (to - from + 1) + from);
+};
+
 var plane = {};
+var planes = [];
 var ground = {};
+var entities = [];
+
+var groundLevel = 0;
 
 var Vector = function Vector(x, y) {
     this.x = x || 0;
@@ -107,6 +115,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/ground.png',
         id: 'ground'
+    }, {
+        src: 'images/bloke.png',
+        id: 'avatar'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -122,11 +133,19 @@ var createPlane = function() {
 
     stage.addChild(asset);
 
-    plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+    var x = randomBetween(1, viewport.dimensions.x);
+
+    plane.setPosition(new Vector(x, viewport.dimensions.y));
+
+    var xVel = randomBetween(-20, 20);
+    var yVel = randomBetween(-4, 4);
 
     plane.setVelocity(new Vector(-0.3, -0.1));
-    plane.setMaxVelocity(new Vector(-20, -5));
+    plane.setMaxVelocity(new Vector(xVel, yVel));
     plane.setAcceleration(new Vector(-0.002, -0.002));
+
+    planes.push(plane);
+    entities.push(plane);
 
     return plane;
 };
@@ -134,6 +153,8 @@ var createPlane = function() {
 var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
+
+    groundLevel = viewport.dimensions.y - (groundImage.height * 0.8);
 
     var asset = ground.asset = new createjs.Shape();
     asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
@@ -145,7 +166,37 @@ var createGround = function() {
 
     stage.addChild(asset);
 
+    entities.push(ground);
+
     return ground;
+};
+
+var createAvatar = function () {
+    var avatar = new Entity();
+    var avatarImage = {
+        width: 40,
+        height: 61
+    };
+
+    var data = new createjs.SpriteSheet({
+        "images": [loader.getResult("avatar")],
+        "frames": {"regX": 0, "height": avatarImage.height, "count": 16, "regY": 0, "width": avatarImage.width},
+        // define two animations, run (loops, 1.5x speed) and jump (returns to run):
+        "animations": {"run": [8, 11, "run", 1.5]}
+    });
+
+    avatar.asset = new createjs.Sprite(data, "run");
+    avatar.asset.setTransform(0, 0, 0.8, 0.8);
+    avatar.asset.framerate = fpsHandler.fps;
+
+    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
+    avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
+
+    stage.addChild(avatar.asset);
+
+    entities.push(avatar);
+
+    return avatar;
 };
 
 var fpsHandler = {
@@ -181,8 +232,10 @@ var fpsHandler = {
 
 var onTick = function(event) {
     fpsHandler.calculateChange();
-    plane.update();
-    ground.update();
+
+    for (var i = entities.length; i--;) {
+        entities[i].update();
+    }
 
     stage.update(event);
 };
@@ -232,8 +285,15 @@ var attachInput = function(gameActions) {
 };
 
 var gameActions = {
+<<<<<<< HEAD
     resetPlane: function() {
         plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+=======
+    resetPlane: function () {
+        var toReset = randomBetween(0, planes.length - 1);
+
+        planes[toReset].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+>>>>>>> 34e0ee18e0a4707c35f796225370e4031d2e2594
     }
 };
 
@@ -287,14 +347,18 @@ function init() {
     loadAssets(function() {
         var square = new createjs.Shape();
 
-        square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
+        square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
         ground = createGround();
 
-        plane = createPlane();
+        var numberOfPlanes = randomBetween(1, 10);
 
-        ground = createGround();
+        for (var i = numberOfPlanes; i--;) {
+            createPlane();
+        }
+
+        createAvatar();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
