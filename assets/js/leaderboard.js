@@ -1,6 +1,6 @@
  (function() {
      var socket = io.connect('/');
-     var playerScore = 20;
+     var playerScore = Math.floor((Math.random()*1000));;
      var playerId;
      var firstTime = true;
      socket.on('player', function(data) {

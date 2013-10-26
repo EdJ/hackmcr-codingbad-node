@@ -27,10 +27,7 @@ Vector.prototype.cap = function(capTo) {
 };
 
 Vector.prototype.multiply = function(by) {
-    this.x = this.x * by;
-    this.y = this.y * by;
-
-    return this;
+    return new Vector(this.x * by, this.y * by);
 };
 
 var Entity = function Entity() {
@@ -72,6 +69,22 @@ Entity.prototype.update = function() {
     this._velocity.add(this._acceleration).cap(this._maxVelocity);
 };
 
+Entity.prototype.startScrolling = function () {
+    this._oldUpdate = this.update;
+
+    this.update = function () {
+        this._oldUpdate();
+
+        if (this._position.x < -this._dimensions.x) {
+            this.position.x += this._dimensions.x;
+        }
+    };
+};
+
+Entity.prototype.stopScrolling = function () {
+    this.update = this._oldUpdate;
+};
+
 var setupGame = function(stage) {
     canvas = stage.canvas;
 
@@ -89,14 +102,12 @@ var setupGame = function(stage) {
 
 var loadAssets = function(handleComplete) {
     var manifest = [{
-            src: 'images/plane2small.png',
-            id: 'plane'
-        }, {
-            src: 'images/ground.png',
-            id: 'ground'
-        }
-
-    ];
+        src: 'images/plane2small.png',
+        id: 'plane'
+    }, {
+        src: 'images/ground.png',
+        id: 'ground'
+    }];
 
     loader = new createjs.LoadQueue(false);
     loader.addEventListener('complete', handleComplete);
@@ -207,7 +218,7 @@ var attachInput = function (gameActions) {
 
     var chimput = function (gameActions) {
         createjs.Ticker.addEventListener('tick', function () {
-            if (Math.random() > 0.9) {
+            if (Math.random() > 0.99) {
                 gameActions.resetPlane();
             }
         });
@@ -215,6 +226,7 @@ var attachInput = function (gameActions) {
 
     mouseInput(gameActions);
     keyboardInput(gameActions);
+    chimput(gameActions);
 };
 
 var gameActions = {
@@ -228,17 +240,16 @@ function init() {
     setupGame(stage);
 
     loadAssets(function() {
-
         var square = new createjs.Shape();
 
         square.graphics.beginFill("#000000").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
+        ground = createGround();
 
         plane = createPlane();
 
         ground = createGround();
-        conzole.wat
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
