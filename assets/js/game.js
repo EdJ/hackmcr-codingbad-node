@@ -76,6 +76,9 @@ var loadAssets = function(handleComplete) {
     },{
         src: 'images/tree1.png',
         id: 'tree'
+    }, {
+        src: 'images/plane1small.png',
+        id: 'redPlane'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -202,6 +205,7 @@ var createSecurityAvatar = function() {
     gameActions._oldJump = gameActions.jump;
 
     gameActions.jump = function() {
+        Sound.play('GameSpawn');
         gameActions._oldJump();
         setTimeout(function () {
             avatar.jump();
@@ -407,7 +411,7 @@ var outsideWindowAssets = function () {
         return new Vector(x, y);
     };
 
-    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 4, 0), new Vector(0, 0), 2.5);
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 3, 0), new Vector(0, 0), 1.5);
 };
 
 function init() {
@@ -433,7 +437,8 @@ function init() {
 
         createBackdrop('backdrop', gameSettings.backdropSpeed);
 
-        createPlane();
+        createPlane('plane', 0.5);
+        createPlane('redPlane', 0.3);
 
         playBackgroundMusic();
 
