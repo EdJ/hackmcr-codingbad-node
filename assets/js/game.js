@@ -373,8 +373,8 @@ var attachInput = function(gameActions) {
     }
 };
 
-    setupLeaderBoard();
 var gameActions = {};
+    setupLeaderBoard();
 
 function init() {
     if ($.QueryString.chimput) {
