@@ -1,10 +1,13 @@
 var startSuitcaseSpawner = function() {
+    var coolingOffPeriodRemaining = 0;
     createjs.Ticker.addEventListener('tick', function() {
-        if (Math.random() > (1-gameSettings.suitcaseSpawnProbability)) {
+        coolingOffPeriodRemaining--;
+        if ((Math.random() > (1-gameSettings.suitcaseSpawnProbability)) && (coolingOffPeriodRemaining < 0)) {
             createSuitcase();
+            coolingOffPeriodRemaining = gameSettings.coolingOffPeriod;
         }
     });
-}
+};
 
 var createSuitcase = function() {
     var suitcase = new Entity();
@@ -29,7 +32,7 @@ var createSuitcase = function() {
         return new Vector(x, y);
     };
 
-
+    obstacles.push(suitcase);
 
     entities.push(suitcase);
 

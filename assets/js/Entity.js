@@ -35,7 +35,7 @@ Entity.prototype.update = function() {
     this.asset.x = this._position.x;
     this.asset.y = this._position.y;
 
-    this._velocity.add(this._acceleration).cap(this._maxVelocity);
+    this._velocity.add(this._acceleration.multiply(fpsHandler.frameComplete)).cap(this._maxVelocity);
 };
 
 Entity.prototype.startScrolling = function() {
