@@ -341,7 +341,8 @@ var socket;
 var connect = function() {
     socket = io.connect('/');
     socket.on('player', function(data) {
-        playerId = data.id;
+        playerId = localStorage.getItem('playerId') || data.id;
+        localStorage.setItem('playerId', playerId);
         console.log(JSON.stringify(data));
     });
 };
