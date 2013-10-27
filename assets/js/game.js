@@ -156,17 +156,18 @@ var createAvatar = function() {
         }
 
         this._jumping = true;
-        avatar.setAcceleration(new Vector(0, -1.5));
-
+        avatar.setAcceleration(new Vector(0, -gameSettings.jumpAccel));
 
         this._oldUpdate = this.update;
 
         this._lowestY = groundLevel - this._dimensions.y;
 
+        var gravity = gameSettings.gravity;
+
         this.update = function () {
             this._oldUpdate();
 
-            this._acceleration.y += 0.098;
+            this._acceleration.y += gravity;
             if (this._position.y > this._lowestY) {
                 this._acceleration.y = 0;
                 this._velocity.y = 0;
