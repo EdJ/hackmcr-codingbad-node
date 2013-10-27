@@ -292,6 +292,10 @@ endGame = function() {
     leaderboard.gameOver(score);
 
     $("#leaderBoard").css('visibility', 'visible');
+
+    if ($.QueryString.chimput) {
+        setTimeout(function() { location.reload(); }, 5000);
+    }
 };
 
 collisionMethod = ndgmr.checkPixelCollision;
