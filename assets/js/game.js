@@ -108,8 +108,6 @@ var setupGame = function(stage) {
         }
     };
 
-    console.log(viewport.dimensions.y);
-
     canvas.width = viewport.dimensions.x - 5;
     canvas.height = viewport.dimensions.y - 5;
 };
@@ -217,7 +215,7 @@ var createAvatar = function() {
         },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
         "animations": {
-            "run": [8, 11, "run", 1.5]
+            "run": [8, 11, "run", 0.5]
         }
     });
 
@@ -240,12 +238,16 @@ var createBackground = function() {
     var backgroundImage = loader.getResult("background");
 
     var preScale = 1 / (((100 / groundLevel) * backgroundImage.height) / 100);
+    backgroundImage.scaleX = 0.1;
 
     var asset = background.asset = new createjs.Shape();
-    asset.setTransform(0, 0, scale, scale);
-    asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
 
-    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
+    asset.graphics.beginBitmapFill(backgroundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
+    asset.setTransform(0, 0, scale, scale);
+
+    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height).multiply(preScale));
     background.setVelocity(new Vector(-3, 0));
     background.startScrolling();
 
@@ -276,7 +278,7 @@ var createBackdrop = function() {
 };
 
 var fpsHandler = {
-    fps: 10,
+    fps: 20,
     lastRender: 0,
     calculateChange: function(event) {
         if (!this.numTicks) {
@@ -372,7 +374,6 @@ var connect = function() {
     socket.on('player', function(data) {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
-        console.log(JSON.stringify(data));
     });
 };
 
@@ -389,7 +390,6 @@ var leaderboard = {
 };
 
 function init() {
-
     leaderboard.connect();
 
     stage = new createjs.Stage("travelatorCanvas");
