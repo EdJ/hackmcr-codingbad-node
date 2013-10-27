@@ -14,6 +14,10 @@ var scale = 1;
 
 var groundLevel = 0;
 
+var playerScore = 0;
+var actualScore;
+var score = 0;
+
 var setupGame = function(stage) {
     canvas = stage.canvas;
 
@@ -229,12 +233,39 @@ var fpsHandler = {
     lastDiff: 0
 };
 
+var addScoreBoard = function() {
+    var scoreTitle = new createjs.Text("Score : ", "15px Arial Bold", "#000");
+    scoreTitle.y = 7;
+    scoreTitle.x = 7;
+
+    stage.addChild(scoreTitle);
+};
+
+var updateScore = function() {
+    
+    var playerScore = createjs.Ticker.getTime() / 100;
+    if (playerScore % 5 < 1) {
+        score += 5;
+    }
+
+    stage.removeChild(actualScore);
+
+    actualScore =  new createjs.Text(score, "18px Arial Bold", "Red");
+    actualScore.y = 5;
+    actualScore.x = 60;
+
+    stage.addChild(actualScore); 
+       
+};
+
 var onTick = function(event) {
     fpsHandler.calculateChange();
 
     for (var i = entities.length; i--;) {
         entities[i].update();
     }
+    
+    updateScore();
 
     stage.update(event);
 };
@@ -313,6 +344,8 @@ function init() {
         createSecurityAvatar();
 
         createSuitcase();
+
+        addScoreBoard();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
