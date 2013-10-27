@@ -197,7 +197,9 @@ var createSecurityAvatar = function() {
 
     gameActions.jump = function() {
         gameActions._oldJump();
-        avatar.jump();
+        setTimeout(function () {
+            avatar.jump();
+        }, randomBetween(200, 325));
     };
 
     entities.push(avatar);
