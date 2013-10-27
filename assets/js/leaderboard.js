@@ -54,7 +54,21 @@ var setupLeaderBoard = function() {
 
     connect();
 
+     var playerScore = Math.floor((Math.random() * 1000));
+
     leaderboardStage = new createjs.Stage("leaderBoard");
+    scoreBoardStage = new createjs.Stage("scoreBoard");
+    var scoreTitle = new createjs.Text("Score : ", "15px Arial", "#FFF");
+    scoreTitle.y = 5;
+    scoreTitle.x = 7;
+
+    var actualScore =  new createjs.Text(playerScore, "18px Arial Bold", "Red");
+    actualScore.y = 5;
+    actualScore.x = 60;
+
+    scoreBoardStage.addChild(scoreTitle);
+      scoreBoardStage.addChild(actualScore);
+    scoreBoardStage.update();
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
@@ -90,8 +104,7 @@ var setupLeaderBoard = function() {
     leaderboardStage.addChild(playerTitle);
     leaderboardStage.addChild(scoreTitle);
 
-    rect.addEventListener("click", function() {
-        var playerScore = Math.floor((Math.random() * 1000));
+    rect.addEventListener("click", function() {       
         leaderboard.gameOver(playerScore)
     });
 
