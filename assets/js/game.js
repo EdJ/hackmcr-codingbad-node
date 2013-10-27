@@ -407,7 +407,7 @@ var outsideWindowAssets = function () {
         return new Vector(x, y);
     };
 
-    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed - 4, 0), new Vector(0, 0), 2.5);
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 4, 0), new Vector(0, 0), 2.5);
 };
 
 function init() {
