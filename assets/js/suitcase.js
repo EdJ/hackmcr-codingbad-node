@@ -1,4 +1,4 @@
-var suitcase = function() {
+var createSuitcase = function() {
     var suitcase = new Entity();
     var suitcaseImage = {
         width: 40,

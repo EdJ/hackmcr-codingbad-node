@@ -309,6 +309,8 @@ function init() {
 
         createSecurityAvatar();
 
+        createSuitcase();
+
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
         attachInput(gameActions);
