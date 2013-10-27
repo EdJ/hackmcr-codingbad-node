@@ -19,6 +19,11 @@ var groundLevel = 0;
 var playerScore = 0;
 var actualScore;
 var score = 0;
+var audioPath = "../_assets_soundjs/";
+var backgroundManifest = [{
+    id: "Music",
+    src: audioPath + "M-GameBG.mp3|" + audioPath + "M-GameBG.ogg"
+}];
 
 var setupGame = function(stage) {
     canvas = stage.canvas;
@@ -56,16 +61,16 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/backdrop.jpg',
         id: 'backdrop'
-    },{
+    }, {
         src: 'images/securityBloke.png',
         id: 'securityBloke'
-    },{
+    }, {
         src: 'images/suitcase1.png',
         id: 'suitcase1'
-    },{
+    }, {
         src: 'images/suitcase2.png',
         id: 'suitcase2'
-    },{
+    }, {
         src: 'images/suitcase3.png',
         id: 'suitcase3'
     }];
@@ -132,7 +137,7 @@ var createAvatar = function() {
     avatar.setPosition(new Vector(viewport.dimensions.x / 5, groundLevel - (avatarImage.height * scale)));
 
     avatar._firstUpdate = avatar.update;
-    avatar.update = function () {
+    avatar.update = function() {
         this._firstUpdate();
 
         var obstacle;
@@ -146,8 +151,8 @@ var createAvatar = function() {
             }
         }
     };
-   
-    avatar.jump = function () {
+
+    avatar.jump = function() {
         if (this._jumping) {
             return;
         }
@@ -161,7 +166,7 @@ var createAvatar = function() {
 
         var gravity = gameSettings.gravity;
 
-        this.update = function () {
+        this.update = function() {
             this._oldUpdate();
 
             this._acceleration.y += gravity;
@@ -181,7 +186,7 @@ var createAvatar = function() {
 
     entities.push(avatar);
 
-    gameActions.jump = function () {
+    gameActions.jump = function() {
         avatar.jump();
     };
 
@@ -271,21 +276,28 @@ var updateScore = function() {
 
     stage.removeChild(actualScore);
 
-    actualScore =  new createjs.Text(score, "18px Arial Bold", "Red");
+    actualScore = new createjs.Text(score, "18px Arial Bold", "Red");
     actualScore.y = 5;
     actualScore.x = 60;
 
-    stage.addChild(actualScore); 
+    stage.addChild(actualScore);
 };
 
 var stopUpdating = false;
 
-endGame = function () {
+endGame = function() {
     stopUpdating = true;
     leaderboard.gameOver(score);
 
     $("#leaderBoard").css('visibility', 'visible');
+
+    if ($.QueryString.chimput) {
+        setTimeout(function() { location.reload(); }, 5000);
+    }
 };
+
+collisionMethod = ndgmr.checkPixelCollision;
+window.alphaThresh = 0.75;
 
 var onTick = function(event) {
     if (stopUpdating) {
@@ -295,10 +307,16 @@ var onTick = function(event) {
     fpsHandler.calculateChange();
 
     for (var i = entities.length; i--;) {
+        console.log(typeof(entities[i]));
         entities[i].update();
     }
-    
+
     updateScore();
+
+    // var intersection = collisionMethod(shelter,star,window.alphaThresh);
+    // if ( intersection ) {
+    //  console.log(intersection.x,intersection.y,intersection.width,intersection.height);
+    // }
 
     stage.update(event);
 };
@@ -353,10 +371,32 @@ var attachInput = function(gameActions) {
     }
 };
 
+
+function handleLoad(event) {
+    createjs.Sound.play(event.src);
+}
+
+var createBackgroundMusic = function() {
+
+    setupLeaderBoard();
+    if (!createjs.Sound.initializeDefaultPlugins()) {
+        return;
+    }
+
+    createjs.Sound.addEventListener("loadComplete", handleLoad);
+    createjs.Sound.registerManifest(backgroundManifest);
+
+};
+
 var gameActions = {};
 
 function init() {
+    if ($.QueryString.chimput) {
+        localStorage.playerName = "Chimput";
+    }
+
     stage = new createjs.Stage("travelatorCanvas");
+
     setupGame(stage);
 
     setupLeaderBoard();
@@ -371,6 +411,7 @@ function init() {
         createBackdrop();
 
         createPlane();
+        createBackgroundMusic();
 
         createGround();
 

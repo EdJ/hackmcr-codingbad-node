@@ -1,4 +1,3 @@
-
 var Entity = function Entity() {
     this._velocity = new Vector();
 
