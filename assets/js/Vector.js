@@ -15,6 +15,9 @@ Vector.prototype.cap = function(capTo) {
     this.x = this.x > capTo.x ? capTo.x : this.x;
     this.y = this.y > capTo.y ? capTo.y : this.y;
 
+    this.x = this.x < -capTo.x ? -capTo.x : this.x;
+    this.y = this.y < -capTo.y ? -capTo.y : this.y;
+
     return this;
 };
 

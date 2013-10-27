@@ -75,7 +75,7 @@ var loadAssets = function(handleComplete) {
 };
 
 var playBackgroundMusic = function() {
-   Sound.play("background");
+    Sound.play("background");
 };
 
 
@@ -163,7 +163,11 @@ var createAvatar = function() {
         }
 
         this._jumping = true;
-        avatar.setAcceleration(new Vector(0.15, -gameSettings.jumpAccel));
+        this.setAcceleration(new Vector(0.15, -gameSettings.jumpAccel));
+
+        if (this._velocity.x < 0) {
+            this._velocity.x = 0;
+        }
 
         this._oldUpdate = this.update;
 
@@ -308,7 +312,7 @@ var stopUpdating = false;
 
 endGame = function() {
     stopUpdating = true;
-    Sound.play("explosion");    
+    Sound.play("explosion");
     leaderboard.gameOver(score);
 
     $("#leaderBoard").css('visibility', 'visible');
@@ -367,7 +371,7 @@ var attachInput = function(gameActions) {
 
     var chimput = function(gameActions) {
         createjs.Ticker.addEventListener('tick', function() {
-            if (Math.random() > 0.95) {
+            if (Math.random() > 0.985) {
                 gameActions.jump();
             }
             if (Math.random() > 0.995) {
@@ -400,7 +404,6 @@ function init() {
     loadAssets(function() {
         var square = new createjs.Shape();
         square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
-
 
         stage.addChild(square);
 
