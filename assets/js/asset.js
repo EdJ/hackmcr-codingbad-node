@@ -1,8 +1,10 @@
-var createAsset = function(imageName, getassetCoords, velocity, acceleration) {
+var createAsset = function(imageName, getassetCoords, velocity, acceleration, itemScale) {
+    itemScale = itemScale || 1;
+
     var graphicalAsset = new Entity();
 
     var asset = graphicalAsset.asset = new createjs.Bitmap(loader.getResult(imageName));
-    asset.setTransform(0, 0, scale, scale);
+    asset.setTransform(0, 0, scale * itemScale, scale * itemScale);
 
     stage.addChild(asset);
 
