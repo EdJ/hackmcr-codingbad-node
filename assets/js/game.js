@@ -376,11 +376,6 @@ function handleLoad(event) {
 
 var createBackgroundMusic = function() {
 
-
-    if ($.QueryString.chimput) {
-        localStorage.playerName = "Chimput";
-    }
-
     setupLeaderBoard();
     if (!createjs.Sound.initializeDefaultPlugins()) {
         return;
@@ -394,6 +389,10 @@ var createBackgroundMusic = function() {
 var gameActions = {};
 
 function init() {
+    if ($.QueryString.chimput) {
+        localStorage.playerName = "Chimput";
+    }
+
     stage = new createjs.Stage("travelatorCanvas");
 
     setupGame(stage);
