@@ -26,8 +26,6 @@ var setupGame = function(stage) {
     var expectedHeight = 320;
 
     scale = ((100 / 1280) * window.innerWidth) / 100;
-    stage.scaleX = scale;
-    stage.scaleY = scale;
 
     canvas = document.getElementById("travelatorCanvas");
     viewport = {
@@ -85,19 +83,18 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
-
     var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
 
-    groundLevel = viewport.dimensions.y - (groundImage.height * scale * preScale);
+    groundLevel = viewport.dimensions.y - (groundImage.height * preScale);
 
     var asset = ground.asset = new createjs.Shape();
-    var matrix = new createjs.Matrix2D
+    var matrix = new createjs.Matrix2D();
     matrix.scale(preScale, preScale);
 
-    asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
-
+    asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + (groundImage.width * preScale), groundImage.height * preScale);
+    
     ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
-    ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
+    ground.setPosition(new Vector(0, viewport.dimensions.y - (groundImage.height * preScale)));
     ground.setVelocity(new Vector(gameSettings.groundSpeed, 0));
     ground.startScrolling();
 
@@ -132,11 +129,11 @@ var createAvatar = function() {
 
     avatar.asset = new createjs.BitmapAnimation(data);
     avatar.asset.gotoAndPlay("run");
-    avatar.asset.setTransform(0, 0, scale, scale);
     avatar.asset.framerate = fpsHandler.fps;
+    avatar.asset.scaleX = avatar.asset.scaleY = scale;
 
-    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
-    avatar.setPosition(new Vector(300, groundLevel - avatarImage.height));
+    avatar.setDimensions(new Vector(avatarImage.width * scale, avatarImage.height * scale));
+    avatar.setPosition(new Vector(viewport.dimensions.x / 5, groundLevel - (avatarImage.height * scale)));
 
     avatar._firstUpdate = avatar.update;
     avatar.update = function() {
@@ -172,8 +169,8 @@ var createAvatar = function() {
 
         this.update = function() {
             this._oldUpdate();
-
-            this._acceleration.y += gravity;
+            
+            this._acceleration.y += gravity * fpsHandler.frameComplete;
             if (this._position.y > this._lowestY) {
                 this._acceleration.y = 0;
                 this._velocity.y = 0;
@@ -221,9 +218,10 @@ var createSecurityAvatar = function() {
 
     avatar.asset = new createjs.Sprite(data, "run");
     avatar.asset.framerate = fpsHandler.fps;
+    avatar.asset.scaleX = avatar.asset.scaleY = scale;
 
-    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
-    avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
+    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height).multiply(scale));
+    avatar.setPosition(new Vector(viewport.dimensions.x / 10, groundLevel - (avatarImage.height * scale)));
 
     stage.addChild(avatar.asset);
 
@@ -294,6 +292,10 @@ endGame = function() {
     leaderboard.gameOver(score);
 
     $("#leaderBoard").css('visibility', 'visible');
+
+    if ($.QueryString.chimput) {
+        setTimeout(function() { location.reload(); }, 5000);
+    }
 };
 
 collisionMethod = ndgmr.checkPixelCollision;
@@ -371,9 +373,14 @@ var attachInput = function(gameActions) {
     }
 };
 
+    setupLeaderBoard();
 var gameActions = {};
 
 function init() {
+    if ($.QueryString.chimput) {
+        localStorage.playerName = "Chimput";
+    }
+
     stage = new createjs.Stage("travelatorCanvas");
     stage.addEventListener("click", handleClick);
  function handleClick(event) {
@@ -388,8 +395,7 @@ function init() {
     loadAssets(function() {
         var square = new createjs.Shape();
         square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
-        stage.scaleX = scale;
-        stage.scaleY = scale;
+
 
         stage.addChild(square);
 
