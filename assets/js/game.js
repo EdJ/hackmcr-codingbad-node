@@ -367,7 +367,7 @@ var attachInput = function(gameActions) {
 
     var chimput = function(gameActions) {
         createjs.Ticker.addEventListener('tick', function() {
-            if (Math.random() > 0.90) {
+            if (Math.random() > 0.95) {
                 gameActions.jump();
             }
             if (Math.random() > 0.995) {
@@ -385,7 +385,6 @@ var attachInput = function(gameActions) {
 };
 
 var gameActions = {};
-    setupLeaderBoard();
 
 function init() {
     if ($.QueryString.chimput) {
@@ -393,11 +392,6 @@ function init() {
     }
 
     stage = new createjs.Stage("travelatorCanvas");
-    stage.addEventListener("click", handleClick);
- function handleClick(event) {
-  Sound.play("Game-Spawn");
-  alert('');
- }
 
     setupGame(stage);
 
