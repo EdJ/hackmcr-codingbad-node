@@ -68,7 +68,7 @@ Entity.prototype.setDimensions = function(newDimensions) {
 };
 
 Entity.prototype.update = function() {
-    this._position.add(this._velocity.multiply(scale).multiply(fpsHandler.frameComplete));
+    this._position.add(this._velocity.multiply(fpsHandler.frameComplete));
 
     this.asset.x = this._position.x;
     this.asset.y = this._position.y;
@@ -99,8 +99,6 @@ var setupGame = function(stage) {
     var expectedHeight = 320;
 
     scale = ((100 / 1280) * window.innerWidth) / 100;
-
-    console.log(scale);
 
     canvas = document.getElementById("travelatorCanvas");
     viewport = {
@@ -209,7 +207,7 @@ var createGround = function() {
 };
 
 var createAvatar = function() {
-    avatar = new Entity();
+    var avatar = new Entity();
     var avatarImage = {
         width: 40,
         height: 61
@@ -262,7 +260,7 @@ var createSecurityAvatar = function() {
         },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
         "animations": {
-            "run": [12, 15, "run", 0.5]
+            "run": [12, 16, "run", 0.5]
         }
     });
 
@@ -273,42 +271,9 @@ var createSecurityAvatar = function() {
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
     avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
 
-    avatar.jump = function () {
-        if (this._jumping) {
-            return;
-        }
-
-        this._jumping = true;
-        avatar.setAcceleration(new Vector(0, -1.5));
-
-
-        this._oldUpdate = this.update;
-
-        this._lowestY = groundLevel - this._dimensions.y;
-
-        this.update = function () {
-            this._oldUpdate();
-
-            this._acceleration.y += 0.098;
-            if (this._position.y > this._lowestY) {
-                this._acceleration.y = 0;
-                this._velocity.y = 0;
-
-                this._position.y = this._lowestY;
-
-                this.update = this._oldUpdate;
-                this._jumping = false;
-            }
-        };
-    }
-
     stage.addChild(avatar.asset);
 
     entities.push(avatar);
-
-    gameActions.jump = function () {
-        avatar.jump();
-    };
 
     return avatar;
 };
@@ -405,7 +370,7 @@ var onTick = function(event) {
 
 var attachInput = function(gameActions) {
     var mouseInput = function(gameActions) {
-        stage.addEventListener('stagemousedown', gameActions.jump);
+        stage.addEventListener('stagemousedown', gameActions.resetPlane);
     };
 
     var pressed = {};
@@ -413,7 +378,7 @@ var attachInput = function(gameActions) {
     var keyboardInput = function(gameActions) {
         var handleInput = function() {
             if (pressed[32]) {
-                gameActions.jump();
+                gameActions.resetPlane();
             }
         };
 
@@ -436,8 +401,8 @@ var attachInput = function(gameActions) {
 
     var chimput = function(gameActions) {
         createjs.Ticker.addEventListener('tick', function() {
-            if (Math.random() > 0.95) {
-                gameActions.jump();
+            if (Math.random() > 0.99) {
+                gameActions.resetPlane();
             }
         });
     };
@@ -447,13 +412,14 @@ var attachInput = function(gameActions) {
     chimput(gameActions);
 };
 
-var gameActions = {};
+var gameActions = {
+    resetPlane: function() {}
+};
 
 var playerId;
 var socket;
 var playerScores;
 var leaderboardStage;
-var scoreTextEntities = [];
 
 var connect = function() {
     socket = io.connect('/');
@@ -461,27 +427,19 @@ var connect = function() {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
         console.log(JSON.stringify(data));
-        
-        for (var i = 0; i <= scoreTextEntities.length; i++) {
-            leaderboardStage.removeChild(scoreTextEntities[i])
-        }
-
         for (var i = 0; i <= data.leaderBoard.length; i++) {
             var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 15;
             leaderboardStage.addChild(title);
-            scoreTextEntities.push(title);
             var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 100;
             leaderboardStage.addChild(title);
-            scoreTextEntities.push(title);
             var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 400;
             leaderboardStage.addChild(title);
-            scoreTextEntities.push(title);
             leaderboardStage.update();
         };
     });
