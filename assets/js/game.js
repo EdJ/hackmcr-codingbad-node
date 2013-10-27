@@ -268,6 +268,8 @@ endGame = function() {
 
     $("#leaderBoard").css('visibility', 'visible');
 
+    showFailedBanner();
+
     if ($.QueryString.chimput) {
         setTimeout(function() { location.reload(); }, 5000);
     }
