@@ -453,6 +453,7 @@ var playerId;
 var socket;
 var playerScores;
 var leaderboardStage;
+var scoreTextEntities = [];
 
 var connect = function() {
     socket = io.connect('/');
@@ -460,19 +461,27 @@ var connect = function() {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
         console.log(JSON.stringify(data));
+        
+        for (var i = 0; i <= scoreTextEntities.length; i++) {
+            leaderboardStage.removeChild(scoreTextEntities[i])
+        }
+
         for (var i = 0; i <= data.leaderBoard.length; i++) {
             var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 15;
             leaderboardStage.addChild(title);
+            scoreTextEntities.push(title);
             var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 100;
             leaderboardStage.addChild(title);
+            scoreTextEntities.push(title);
             var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
             title.x = 400;
             leaderboardStage.addChild(title);
+            scoreTextEntities.push(title);
             leaderboardStage.update();
         };
     });
