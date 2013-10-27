@@ -1,15 +1,16 @@
 var playerId;
+var playerName;
 var socket;
 
 var leaderboard = {
     gameOver: function(score) {
         socket.emit('score', {
             id: playerId,
+            name: playerName,
             score: score
         });
     }
 };
-
 
 var setupLeaderBoard = function() {
 
@@ -22,6 +23,8 @@ var setupLeaderBoard = function() {
         socket.on('player', function(data) {
             playerId = localStorage.getItem('playerId') || data.id;
             localStorage.setItem('playerId', playerId);
+            playerName = localStorage.getItem('playerName') || data.name;
+            localStorage.setItem('playerName', playerName);
             console.log(JSON.stringify(data));
 
             for (var i = 0; i < scoreTextEntities.length; i++) {
@@ -34,7 +37,7 @@ var setupLeaderBoard = function() {
                 title.x = 15;
                 leaderboardStage.addChild(title);
                 scoreTextEntities.push(title);
-                var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#6C5D75");
+                var title = new createjs.Text(data.leaderBoard[i].name, "15px Arial", "#6C5D75");
                 title.y = 80 + (20 * i);
                 title.x = 100;
                 leaderboardStage.addChild(title);
@@ -71,7 +74,7 @@ var setupLeaderBoard = function() {
     rankTitle.y = 55;
     rankTitle.x = 15;
 
-    var playerTitle = new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
+    var playerTitle = new createjs.Text("Player Name", "15px Arial", "#DBD8E9");
     playerTitle.y = 55;
     playerTitle.x = 100;
 

@@ -11,6 +11,14 @@ describe('leaderboard', function() {
         });
     });
 
+    it('generates a random name', function(done) {
+        leaderboard.connect(function(playerData) {
+            playerData.name.should.not.be.null;
+
+            done();
+        });
+    });
+
     it('update leaderboard with player score', function(done) {
         var firstFire = true;
         leaderboard.connect(function(playerData) {
