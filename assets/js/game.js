@@ -99,13 +99,20 @@ Entity.prototype.stopScrolling = function() {
 var setupGame = function(stage) {
     canvas = stage.canvas;
 
+    var expectedWidth = 1280;
+    var expectedHeight = 320;
+
+    scale = ((100 / 1280) * window.innerWidth) / 100;
+
     canvas = document.getElementById("travelatorCanvas");
     viewport = {
         dimensions: {
             x: window.innerWidth,
-            y: window.innerHeight
+            y: expectedHeight * scale
         }
     };
+
+    console.log(viewport.dimensions.y);
 
     canvas.width = viewport.dimensions.x - 5;
     canvas.height = viewport.dimensions.y - 5;
@@ -290,7 +297,9 @@ var attachInput = function(gameActions) {
 
 var gameActions = {
     resetPlane: function() {
-        plane.setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
+        var plane = randomBetween(0, planes.length - 1);
+
+        planes[plane].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
     }
 };
 
@@ -335,11 +344,8 @@ function init() {
         var playerScore = Math.floor((Math.random() * 1000));
         leaderboard.gameOver(playerScore);
     });
-    //Update stage will render next frame  
 
     leaderboardStage.update();
-
-
 
     loadAssets(function() {
         var square = new createjs.Shape();
