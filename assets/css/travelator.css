@@ -101,3 +101,6 @@ html, body {
 #leaderBoard{
 visibility:hidden; position: fixed; top: 0; right: 0; border: 0; z-index:99
 }
+#scoreBoard{
+position: fixed; top: 0; left: 0; border: 0; z-index:99;background-color: #6a6b72;
+}
