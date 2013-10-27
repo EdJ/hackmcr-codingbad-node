@@ -130,6 +130,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/backdrop.jpg',
         id: 'backdrop'
+    },{
+        src: 'images/securityBloke.png',
+        id: 'securityBloke'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -232,6 +235,42 @@ var createAvatar = function() {
     avatar.asset.framerate = fpsHandler.fps;
 
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
+    avatar.setPosition(new Vector(300, groundLevel - avatarImage.height));
+
+    stage.addChild(avatar.asset);
+
+    entities.push(avatar);
+
+    return avatar;
+};
+
+var createSecurityAvatar = function() {
+    var avatar = new Entity();
+    var avatarImage = {
+        width: 40,
+        height: 61
+    };
+
+    var data = new createjs.SpriteSheet({
+        "images": [loader.getResult("avatar")],
+        "frames": {
+            "regX": 0,
+            "height": avatarImage.height,
+            "count": 16,
+            "regY": 0,
+            "width": avatarImage.width
+        },
+        // define two animations, run (loops, 1.5x speed) and jump (returns to run):
+        "animations": {
+            "run": [12, 15, "run", 0.5]
+        }
+    });
+
+    avatar.asset = new createjs.Sprite(data, "run");
+    avatar.asset.setTransform(0, 0, scale, scale);
+    avatar.asset.framerate = fpsHandler.fps;
+
+    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
     avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
 
     avatar.jump = function () {
@@ -273,6 +312,7 @@ var createAvatar = function() {
 
     return avatar;
 };
+
 
 var createBackground = function() {
     var background = new Entity();
@@ -411,12 +451,30 @@ var gameActions = {};
 
 var playerId;
 var socket;
+var playerScores;
+var leaderboardStage;
 
 var connect = function() {
     socket = io.connect('/');
     socket.on('player', function(data) {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
+        console.log(JSON.stringify(data));
+        for (var i = 0; i <= data.leaderBoard.length; i++) {
+            var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 15;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 100;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 400;
+            leaderboardStage.addChild(title);
+            leaderboardStage.update();
+        };
     });
 };
 
@@ -426,6 +484,8 @@ var gameOver = function(score) {
         score: score
     });
 };
+
+
 
 var leaderboard = {
     connect: connect,
@@ -438,7 +498,7 @@ function init() {
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
 
-    var leaderboardStage = new createjs.Stage("leaderBoard");
+    leaderboardStage = new createjs.Stage("leaderBoard");
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
@@ -454,15 +514,15 @@ function init() {
     txt.y = 15;
     txt.x = 15;
 
-    var  rankTitle= new createjs.Text("Rank", "15px Arial", "#DBD8E9");
+    var rankTitle = new createjs.Text("Rank", "15px Arial", "#DBD8E9");
     rankTitle.y = 55;
     rankTitle.x = 15;
 
-    var  playerTitle= new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
+    var playerTitle = new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
     playerTitle.y = 55;
     playerTitle.x = 100;
 
-    var  scoreTitle= new createjs.Text("Score", "15px Arial", "#DBD8E9");
+    var scoreTitle = new createjs.Text("Score", "15px Arial", "#DBD8E9");
     scoreTitle.y = 55;
     scoreTitle.x = 400;
 
@@ -476,7 +536,7 @@ function init() {
 
     rect.addEventListener("click", function() {
         var playerScore = Math.floor((Math.random() * 1000));
-        leaderboard.gameOver(playerScore);
+        leaderboard.gameOver(playerScore)
     });
 
     leaderboardStage.update();
@@ -496,6 +556,8 @@ function init() {
         createBackground();
 
         createAvatar();
+
+        createSecurityAvatar();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
