@@ -19,12 +19,6 @@ var groundLevel = 0;
 var playerScore = 0;
 var actualScore;
 var score = 0;
-var audioPath = "../_assets_soundjs/";
-var backgroundManifest = [{
-    id: "Music",
-    src: audioPath + "M-GameBG.mp3|" + audioPath + "M-GameBG.ogg"
-}];
-
 var setupGame = function(stage) {
     canvas = stage.canvas;
 
@@ -79,6 +73,11 @@ var loadAssets = function(handleComplete) {
     loader.addEventListener('complete', handleComplete);
     loader.loadManifest(manifest);
 };
+
+var playBackgroundMusic = function() {
+   Sound.play("background");
+};
+
 
 var createGround = function() {
     var ground = new Entity();
@@ -309,6 +308,7 @@ var stopUpdating = false;
 
 endGame = function() {
     stopUpdating = true;
+    Sound.play("explosion");    
     leaderboard.gameOver(score);
 
     $("#leaderBoard").css('visibility', 'visible');
@@ -384,23 +384,7 @@ var attachInput = function(gameActions) {
     }
 };
 
-
-function handleLoad(event) {
-    createjs.Sound.play(event.src);
-}
-
-var createBackgroundMusic = function() {
-
     setupLeaderBoard();
-    if (!createjs.Sound.initializeDefaultPlugins()) {
-        return;
-    }
-
-    createjs.Sound.addEventListener("loadComplete", handleLoad);
-    createjs.Sound.registerManifest(backgroundManifest);
-
-};
-
 var gameActions = {};
 
 function init() {
@@ -409,6 +393,11 @@ function init() {
     }
 
     stage = new createjs.Stage("travelatorCanvas");
+    stage.addEventListener("click", handleClick);
+ function handleClick(event) {
+  Sound.play("Game-Spawn");
+  alert('');
+ }
 
     setupGame(stage);
 
@@ -424,7 +413,8 @@ function init() {
         createBackdrop();
 
         createPlane();
-        createBackgroundMusic();
+
+        playBackgroundMusic();
 
         createGround();
 
