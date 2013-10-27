@@ -67,6 +67,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/suitcase3.png',
         id: 'suitcase3'
+    }, {
+        src: 'images/grassPlant.png',
+        id: 'grassPlant'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -342,6 +345,35 @@ var attachInput = function(gameActions) {
 
 var gameActions = {};
 
+var createBackgroundAssets = function () {
+    var getItemCoords = function () {
+        var y = groundLevel - (80 * scale);
+        var x = viewport.dimensions.x + randomBetween(15, 450);
+
+        return new Vector(x, y);
+    };
+
+    var firstTime = true;
+    var onScreen = function (startX) {
+        return function () {
+            if (firstTime) {
+                firstTime = false;
+                return getItemCoords();
+            }
+
+            var x = startX;
+            var y = groundLevel - (80 * scale);
+            return new Vector(x, y);
+        };
+    };
+
+    var partial = viewport.dimensions.x / 3;
+
+    createAsset('grassPlant', onScreen(partial), new Vector(gameSettings.groundSpeed + 1, 0), new Vector(0, 0));
+    createAsset('grassPlant', onScreen(partial * 2.3), new Vector(gameSettings.groundSpeed + 1.5, 0), new Vector(0, 0));
+    createAsset('grassPlant', onScreen(partial * 1.7), new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
+};
+
 function init() {
     if ($.QueryString.chimput) {
         localStorage.playerName = "Chimput";
@@ -372,6 +404,8 @@ function init() {
         createGround();
 
         createBackdrop('background', gameSettings.backgroundSpeed);
+
+        createBackgroundAssets();
 
         startSuitcaseSpawner();
 
