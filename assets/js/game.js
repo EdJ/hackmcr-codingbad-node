@@ -404,7 +404,7 @@ var onTick = function(event) {
 
 var attachInput = function(gameActions) {
     var mouseInput = function(gameActions) {
-        stage.addEventListener('stagemousedown', gameActions.resetPlane);
+        //stage.addEventListener('stagemousedown', gameActions.resetPlane);
         stage.addEventListener('stagemousedown', gameActions.jump);
     };
 
@@ -413,7 +413,7 @@ var attachInput = function(gameActions) {
     var keyboardInput = function(gameActions) {
         var handleInput = function() {
             if (pressed[32]) {
-                gameActions.resetPlane();
+                //gameActions.resetPlane();
                 gameActions.jump();
             }
         };
@@ -437,9 +437,9 @@ var attachInput = function(gameActions) {
 
     var chimput = function(gameActions) {
         createjs.Ticker.addEventListener('tick', function() {
-            if (Math.random() > 0.99) {
-                gameActions.resetPlane();
-            }
+            // if (Math.random() > 0.99) {
+            //     gameActions.resetPlane();
+            // }
             if (Math.random() > 0.95) {
                 gameActions.jump();
             }
