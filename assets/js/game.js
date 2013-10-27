@@ -19,8 +19,11 @@ var groundLevel = 0;
 var playerScore = 0;
 var actualScore;
 var score = 0;
-   
 var audioPath = "../_assets_soundjs/";
+var backgroundManifest = [{
+    id: "Music",
+    src: audioPath + "M-GameBG.mp3|" + audioPath + "M-GameBG.ogg"
+}];
 
 var setupGame = function(stage) {
     canvas = stage.canvas;
@@ -357,63 +360,62 @@ var attachInput = function(gameActions) {
     }
 };
 
-var gameActions = {};
+function handleLoad(event) {
+    createjs.Sound.play(event.src);
+}
 
-function init() {
-    stage = new createjs.Stage("travelatorCanvas");
+var createBackgroundMusic = function() {
+
 
     if (!createjs.Sound.initializeDefaultPlugins()) {
         return;
     }
 
- 
-    var manifest = [{
-        id: "Music",
-        src: audioPath + "M-GameBG.mp3|" + audioPath + "M-GameBG.ogg"
-    }];
-
     createjs.Sound.addEventListener("loadComplete", handleLoad);
-    createjs.Sound.registerManifest(manifest);
+    createjs.Sound.registerManifest(backgroundManifest);
 
+};
 
-function handleLoad(event) {
-    createjs.Sound.play(event.src);
-}
+var gameActions = {};
 
-setupGame(stage);
+function init() {
+    stage = new createjs.Stage("travelatorCanvas");
 
-setupLeaderBoard();
+    setupGame(stage);
 
-loadAssets(function() {
-    var square = new createjs.Shape();
-    square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
-    stage.scaleX = scale;
-    stage.scaleY = scale;
+    setupLeaderBoard();
 
-    stage.addChild(square);
+    loadAssets(function() {
+        var square = new createjs.Shape();
+        square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
+        stage.scaleX = scale;
+        stage.scaleY = scale;
 
-    createBackdrop();
+        stage.addChild(square);
 
-    createPlane();
+        createBackdrop();
 
-    createGround();
+        createPlane();
+        createBackgroundMusic();
 
-    createBackground();
+        createGround();
 
-    startSuitcaseSpawner();
+        createBackground();
 
-    createAvatar();
+        startSuitcaseSpawner();
 
-    createSecurityAvatar();
+        createAvatar();
 
-    addScoreBoard();
+        createSecurityAvatar();
 
-    showStartBanner();
+        addScoreBoard();
 
-    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        showStartBanner();
 
-    attachInput(gameActions);
+        createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
-    createjs.Ticker.addEventListener('tick', onTick);
-});
+        attachInput(gameActions);
+
+        createjs.Ticker.addEventListener('tick', onTick);
+    });
 }
