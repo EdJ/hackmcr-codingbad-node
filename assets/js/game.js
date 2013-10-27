@@ -3,11 +3,14 @@ var loader;
 var canvas;
 var viewport;
 
+var endGame;
+
 var randomBetween = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
 };
 
 var entities = [];
+var obstacles = [];
 
 var scale = 1;
 
@@ -24,8 +27,8 @@ var setupGame = function(stage) {
     var expectedHeight = 320;
 
     scale = ((100 / 1280) * window.innerWidth) / 100;
-
-    console.log(scale);
+    stage.scaleX = scale;
+    stage.scaleY = scale;
 
     canvas = document.getElementById("travelatorCanvas");
     viewport = {
@@ -88,8 +91,7 @@ var createGround = function() {
     matrix.scale(preScale, preScale);
 
     asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
-    asset.setTransform(0, 0, scale, scale);
-
+    
     ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
     ground.setVelocity(new Vector(gameSettings.groundSpeed, 0));
@@ -124,12 +126,29 @@ var createAvatar = function() {
         }
     });
 
-    avatar.asset = new createjs.Sprite(data, "run");
+    avatar.asset = new createjs.BitmapAnimation(data);
+    avatar.asset.gotoAndPlay("run");
     avatar.asset.setTransform(0, 0, scale, scale);
     avatar.asset.framerate = fpsHandler.fps;
 
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
     avatar.setPosition(new Vector(300, groundLevel - avatarImage.height));
+
+    avatar._firstUpdate = avatar.update;
+    avatar.update = function () {
+        this._firstUpdate();
+
+        var obstacle;
+        for (var i = obstacles.length; i--;) {
+            obstacle = obstacles[i];
+
+            var isColliding = ndgmr.checkPixelCollision(obstacle.asset, this.asset, 0.75, true);
+
+            if (isColliding) {
+                endGame();
+            }
+        }
+    };
    
     avatar.jump = function () {
         if (this._jumping) {
@@ -194,7 +213,6 @@ var createSecurityAvatar = function() {
     });
 
     avatar.asset = new createjs.Sprite(data, "run");
-    avatar.asset.setTransform(0, 0, scale, scale);
     avatar.asset.framerate = fpsHandler.fps;
 
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
@@ -247,7 +265,6 @@ var addScoreBoard = function() {
 };
 
 var updateScore = function() {
-    
     var playerScore = createjs.Ticker.getTime() / 100;
     if (playerScore % 5 < 1) {
         score += 5;
@@ -260,10 +277,22 @@ var updateScore = function() {
     actualScore.x = 60;
 
     stage.addChild(actualScore); 
-       
+};
+
+var stopUpdating = false;
+
+endGame = function () {
+    stopUpdating = true;
+    leaderboard.gameOver(score);
+
+    $("#leaderBoard").css('visibility', 'visible');
 };
 
 var onTick = function(event) {
+    if (stopUpdating) {
+        return;
+    }
+
     fpsHandler.calculateChange();
 
     for (var i = entities.length; i--;) {
@@ -336,6 +365,8 @@ function init() {
     loadAssets(function() {
         var square = new createjs.Shape();
         square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
+        stage.scaleX = scale;
+        stage.scaleY = scale;
 
         stage.addChild(square);
 
@@ -347,11 +378,11 @@ function init() {
 
         createBackground();
 
+        startSuitcaseSpawner();
+
         createAvatar();
 
         createSecurityAvatar();
-
-        startSuitcaseSpawner();
 
         addScoreBoard();
 

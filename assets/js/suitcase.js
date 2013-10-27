@@ -4,7 +4,7 @@ var startSuitcaseSpawner = function() {
             createSuitcase();
         }
     });
-}
+};
 
 var createSuitcase = function() {
     var suitcase = new Entity();
@@ -29,7 +29,7 @@ var createSuitcase = function() {
         return new Vector(x, y);
     };
 
-
+    obstacles.push(suitcase);
 
     entities.push(suitcase);
 
