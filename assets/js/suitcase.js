@@ -15,8 +15,8 @@ var createSuitcase = function() {
     var suitcaseType = randomBetween(1, 3);
     var suitcaseImage = loader.getResult('suitcase' + suitcaseType);
     var asset = suitcase.asset = new createjs.Bitmap(suitcaseImage);
-    var xPos = groundLevel - (suitcaseImage.height * 0.5);
-    asset.setTransform(0, 0, scale * 0.5, scale * 0.5);
+    var xPos = groundLevel - (suitcaseImage.height * 0.5 * scale);
+    asset.setTransform(0, 0, 0.5 * scale, 0.5 * scale);
 
     suitcase.setPosition(new Vector(viewport.dimensions.x, xPos));
     suitcase.setVelocity(new Vector(gameSettings.groundSpeed, 0));

@@ -8,7 +8,7 @@ var createBackdrop = function() {
     var matrix = new createjs.Matrix2D
     matrix.scale(preScale, preScale);
 
-    asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
+    asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + (backdropImage.width * preScale), backdropImage.height * preScale);
 
     backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height).multiply(preScale));
     backdrop.setVelocity(new Vector(gameSettings.backdropSpeed, 0));
