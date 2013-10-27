@@ -74,7 +74,7 @@ var loadAssets = function(handleComplete) {
         src: 'images/travelator.png',
         id: 'travelator'
     },{
-        src: 'images/tree2.png',
+        src: 'images/tree1.png',
         id: 'tree'
     }];
 
@@ -379,15 +379,17 @@ var createBackgroundAssets = function () {
     createAsset('grassPlant', onScreen(partial), new Vector(gameSettings.groundSpeed + 1, 0), new Vector(0, 0));
     createAsset('grassPlant', onScreen(partial * 2.3), new Vector(gameSettings.groundSpeed + 1.5, 0), new Vector(0, 0));
     createAsset('grassPlant', onScreen(partial * 1.7), new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
+};
 
+var foregroundAssets = function () {
     var travelatorPosition = function () {
-        var y = groundLevel - (80 * scale);
+        var y = groundLevel - (43 * scale);
         var x = viewport.dimensions.x + randomBetween(15, 450);
 
         return new Vector(x, y);
     };
 
-    createAsset('travelator', travelatorPosition, new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
+    createAsset('travelator', travelatorPosition, new Vector(gameSettings.groundSpeed - 0.5, 0), new Vector(0, 0), 0.5);
 };
 
 var outsideWindowAssets = function () {
@@ -441,6 +443,8 @@ function init() {
         createAvatar();
 
         createSecurityAvatar();
+
+        foregroundAssets();
 
         addScoreBoard();
 
