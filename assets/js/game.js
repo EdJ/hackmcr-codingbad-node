@@ -272,7 +272,7 @@ var attachInput = function(gameActions) {
 
     var chimput = function(gameActions) {
         createjs.Ticker.addEventListener('tick', function() {
-            if (Math.random() > 0.95) {
+            if (Math.random() > 0.90) {
                 gameActions.jump();
             }
         });
@@ -280,7 +280,10 @@ var attachInput = function(gameActions) {
 
     mouseInput(gameActions);
     keyboardInput(gameActions);
-    chimput(gameActions);
+
+    if ($.QueryString.chimput) {
+        chimput(gameActions);
+    }
 };
 
 var gameActions = {};
