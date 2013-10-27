@@ -78,14 +78,11 @@ var playBackgroundMusic = function() {
     Sound.play("background");
 };
 
-
 var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
     var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
-
-    groundLevel = viewport.dimensions.y - (groundImage.height * preScale);
 
     var asset = ground.asset = new createjs.Shape();
     var matrix = new createjs.Matrix2D();
@@ -362,7 +359,11 @@ function init() {
 
         stage.addChild(square);
 
-        createBackdrop();
+        var groundImage = loader.getResult("ground");
+        var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
+        groundLevel = viewport.dimensions.y - (groundImage.height * preScale);
+
+        createBackdrop('backdrop', gameSettings.backdropSpeed);
 
         createPlane();
 
@@ -370,7 +371,7 @@ function init() {
 
         createGround();
 
-        createBackground();
+        createBackdrop('background', gameSettings.backgroundSpeed);
 
         startSuitcaseSpawner();
 
