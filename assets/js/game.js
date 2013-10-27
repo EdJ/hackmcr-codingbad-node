@@ -93,7 +93,7 @@ var createGround = function() {
     matrix.scale(preScale, preScale);
 
     asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + (groundImage.width * preScale), groundImage.height * preScale);
-    
+
     ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - (groundImage.height * preScale)));
     ground.setVelocity(new Vector(gameSettings.groundSpeed, 0));
@@ -152,13 +152,19 @@ var createAvatar = function() {
         }
     };
 
+    avatar.originalX = avatar._position.x;
+
     avatar.jump = function() {
-        if (this._jumping) {
+        if (this._jumping || this._position.x - this.originalX > (viewport.dimensions.x / 5)) {
             return;
         }
 
+        if (this._oldUpdate) {
+            this.update = this._oldUpdate;
+        }
+
         this._jumping = true;
-        avatar.setAcceleration(new Vector(0, -gameSettings.jumpAccel));
+        avatar.setAcceleration(new Vector(0.15, -gameSettings.jumpAccel));
 
         this._oldUpdate = this.update;
 
@@ -168,17 +174,33 @@ var createAvatar = function() {
 
         this.update = function() {
             this._oldUpdate();
-            
-            this._acceleration.y += gravity * fpsHandler.frameComplete;
-            if (this._position.y > this._lowestY) {
-                this._acceleration.y = 0;
-                this._velocity.y = 0;
 
-                this._position.y = this._lowestY;
+            this._acceleration.y += gravity * fpsHandler.frameComplete;
+            if (this._position.y <= this._lowestY) {
+                return;
+            }
+
+            this._acceleration.x = -0.5;
+            this._acceleration.y = 0;
+            this._velocity.y = 0;
+
+            this._position.y = this._lowestY;
+
+            this.update = function () {
+                this._jumping = false;
+
+                this._oldUpdate();
+
+                if (this._position.x > this.originalX) {
+                    return;
+                }
+
+                this._position.x = this.originalX;
+                this._acceleration.x = 0;
+                this._velocity.x = 0;
 
                 this.update = this._oldUpdate;
-                this._jumping = false;
-            }
+            };
         };
     }
 
@@ -296,9 +318,6 @@ endGame = function() {
     }
 };
 
-collisionMethod = ndgmr.checkPixelCollision;
-window.alphaThresh = 0.75;
-
 var onTick = function(event) {
     if (stopUpdating) {
         return;
@@ -307,16 +326,10 @@ var onTick = function(event) {
     fpsHandler.calculateChange();
 
     for (var i = entities.length; i--;) {
-        console.log(typeof(entities[i]));
         entities[i].update();
     }
 
     updateScore();
-
-    // var intersection = collisionMethod(shelter,star,window.alphaThresh);
-    // if ( intersection ) {
-    //  console.log(intersection.x,intersection.y,intersection.width,intersection.height);
-    // }
 
     stage.update(event);
 };
