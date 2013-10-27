@@ -467,17 +467,17 @@ var connect = function() {
         }
 
         for (var i = 0; i <= data.leaderBoard.length; i++) {
-            var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
+            var title = new createjs.Text(i+1, "18px Arial", "#6C5D75");
             title.y = 80 + (20*i);
             title.x = 15;
             leaderboardStage.addChild(title);
             scoreTextEntities.push(title);
-            var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
+            var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#6C5D75");
             title.y = 80 + (20*i);
             title.x = 100;
             leaderboardStage.addChild(title);
             scoreTextEntities.push(title);
-            var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
+            var title = new createjs.Text(data.leaderBoard[i].score, "20px Times New Roman Bold", "#EC0000");
             title.y = 80 + (20*i);
             title.x = 400;
             leaderboardStage.addChild(title);
@@ -511,7 +511,7 @@ function init() {
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
-    rect.graphics.beginFill("#E0CECE").drawRect(0, 0, 500, 700);
+    rect.graphics.beginFill("#CECECE").drawRect(0, 0, 500, 700);
 
     var lbTitleBar = new createjs.Shape();
     lbTitleBar.graphics.beginFill("#211B1B").drawRect(0, 0, 500, 50);
