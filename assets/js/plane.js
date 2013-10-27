@@ -1,4 +1,4 @@
-var createPlane = function() {
+var createPlane = function() {	
     var getPlaneCoords = function () {
         var yOffset = randomBetween(-30, 30);
 
