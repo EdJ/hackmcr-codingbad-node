@@ -168,8 +168,8 @@ var createAvatar = function() {
 
         this.update = function() {
             this._oldUpdate();
-
-            this._acceleration.y += gravity;
+            
+            this._acceleration.y += gravity * fpsHandler.frameComplete;
             if (this._position.y > this._lowestY) {
                 this._acceleration.y = 0;
                 this._velocity.y = 0;

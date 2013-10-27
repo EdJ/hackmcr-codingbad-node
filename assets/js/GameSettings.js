@@ -1,4 +1,3 @@
-
 var gameSettings = {
 	groundSpeed: -8,
 	backdropSpeed: -1,
@@ -6,5 +5,5 @@ var gameSettings = {
 	suitcaseSpawnProbability: 0.01,
 	coolingOffPeriod: 75,
 	jumpAccel: 3,
-	gravity: 0.15
+	gravity: 0.4
 };
