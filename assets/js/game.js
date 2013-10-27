@@ -56,7 +56,7 @@ var loadAssets = function(handleComplete) {
         src: 'images/securityBloke.png',
         id: 'securityBloke'
     },{
-        src: 'images/suitcase.png',
+        src: 'images/suitcase1.png',
         id: 'suitcase'
     }];
 
