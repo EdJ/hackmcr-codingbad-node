@@ -331,6 +331,10 @@ function init() {
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
 
+    if ($.QueryString.chimput) {
+        localStorage.playerName = "Chimput";
+    }
+
     setupLeaderBoard();
 
     loadAssets(function() {
