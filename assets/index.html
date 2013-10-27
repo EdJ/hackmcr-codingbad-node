@@ -5,13 +5,46 @@
     <title>Travelator</title>
     <link href="css/travelator.css" rel="stylesheet" type="text/css" />
 </head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+
+    $("a#showLeaderboard").click(function() {
+        if ($("#leaderBoard").css('visibility') == 'hidden')
+            $("#leaderBoard").css('visibility', 'visible');
+        else
+            $("#leaderBoard").css('visibility', 'hidden');
+    })
+
+});
+</script>
 
 <body onload="init();">
     <div>
+        <div id= "menu">
+            <div id='cssmenu' class="menu">
+                <ul>
+                    <li class='has-sub'>
+                        <a href='#'>
+                            <span>Start Game</span>
+                        </a>
+                    </li>
+                    <li class='has-sub'>
+                        <a id="showLeaderboard">
+                            LeaderBoard
+                        </a>
+                    </li>
+                    <li class='last'>
+                        <a href='#'>
+                            <span>Third One</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <canvas id="travelatorCanvas"></canvas>
         <canvas id="leaderBoard" width="500" height="300"></canvas>
     </div>
-    
     <script src="js/conzole/conzole.js"></script>
     <script src="js/preloadjs-NEXT.min.js"></script>
     <script src="js/createjs/events/Event.js"></script>
@@ -50,7 +83,8 @@
     <script src="js/suitcase.js"></script>
     <script src="js/game.js"></script>
     <script src="js/leaderboard.js"></script>
+
+
 </body>
 
 </html>
-
