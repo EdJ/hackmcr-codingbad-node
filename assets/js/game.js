@@ -263,14 +263,23 @@ var updateScore = function() {
        
 };
 
+collisionMethod = ndgmr.checkPixelCollision;
+window.alphaThresh = 0.75;
+
 var onTick = function(event) {
     fpsHandler.calculateChange();
 
     for (var i = entities.length; i--;) {
+        console.log(typeof(entities[i]));
         entities[i].update();
     }
     
     updateScore();
+
+    // var intersection = collisionMethod(shelter,star,window.alphaThresh);
+    // if ( intersection ) {
+    //  console.log(intersection.x,intersection.y,intersection.width,intersection.height);
+    // }
 
     stage.update(event);
 };
@@ -326,6 +335,7 @@ var attachInput = function(gameActions) {
 };
 
 var gameActions = {};
+
 
 function init() {
     stage = new createjs.Stage("travelatorCanvas");
