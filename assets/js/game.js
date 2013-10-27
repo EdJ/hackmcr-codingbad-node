@@ -205,6 +205,7 @@ var createSecurityAvatar = function() {
     gameActions._oldJump = gameActions.jump;
 
     gameActions.jump = function() {
+        Sound.play('GameSpawn');
         gameActions._oldJump();
         setTimeout(function () {
             avatar.jump();
