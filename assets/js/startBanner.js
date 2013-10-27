@@ -1,6 +1,6 @@
 var showStartBanner = function() {
 
-    var asset = new createjs.Text("Hurry " + localStorage.playerName + "! The planes about to leave.", "32px Arial", "red");
+    var asset = new createjs.Text("Hurry " + localStorage.playerName + "! The plane's about to leave!", "32px Arial", "red");
     asset.setTransform(0, 0, scale, scale);
     asset.y = 100;
     asset.x = 100;
