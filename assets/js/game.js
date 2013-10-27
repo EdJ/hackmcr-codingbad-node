@@ -346,9 +346,9 @@ var attachInput = function(gameActions) {
             if (Math.random() > 0.985) {
                 gameActions.jump();
             }
-            if (Math.random() > 0.995) {
-                $("a#showLeaderboard").click();
-            }
+            // if (Math.random() > 0.995) {
+            //     $("a#showLeaderboard").click();
+            // }
         });
     };
 
@@ -437,8 +437,8 @@ function init() {
 
         createBackdrop('backdrop', gameSettings.backdropSpeed);
 
-        createPlane('plane', 0.5);
-        createPlane('redPlane', 0.3);
+        createPlane('plane', 0.5, new Vector(-3, 0));
+        createPlane('redPlane', 0.3, new Vector(-10, 0));
 
         playBackgroundMusic();
 

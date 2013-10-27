@@ -1,4 +1,4 @@
-var createPlane = function(assetName, itemScale) {	
+var createPlane = function(assetName, itemScale, velocity) {	
     var getPlaneCoords = function () {
     	Sound.play('aeroplane');
         var yOffset = randomBetween(-30, 30);
@@ -10,5 +10,5 @@ var createPlane = function(assetName, itemScale) {
         return new Vector(x, y);
     };
 
-    return createAsset(assetName, getPlaneCoords, new Vector(-3, 0), new Vector(-0.2, 0), itemScale);
+    return createAsset(assetName, getPlaneCoords, velocity, new Vector(-0.2, 0), itemScale);
 };
