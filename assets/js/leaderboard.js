@@ -54,10 +54,8 @@ var setupLeaderBoard = function() {
 
     connect();
 
-    //var playerScore = Math.floor((Math.random() * 1000));
-
     leaderboardStage = new createjs.Stage("leaderBoard");
-    
+
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
     rect.graphics.beginFill("#CECECE").drawRect(0, 0, 500, 300);
@@ -92,7 +90,8 @@ var setupLeaderBoard = function() {
     leaderboardStage.addChild(playerTitle);
     leaderboardStage.addChild(scoreTitle);
 
-    rect.addEventListener("click", function() {       
+    rect.addEventListener("click", function() {
+        var playerScore = Math.floor((Math.random() * 1000));
         leaderboard.gameOver(playerScore)
     });
 
