@@ -342,9 +342,9 @@ var attachInput = function(gameActions) {
             if (Math.random() > 0.985) {
                 gameActions.jump();
             }
-            if (Math.random() > 0.995) {
-                $("a#showLeaderboard").click();
-            }
+            // if (Math.random() > 0.995) {
+            //     $("a#showLeaderboard").click();
+            // }
         });
     };
 
