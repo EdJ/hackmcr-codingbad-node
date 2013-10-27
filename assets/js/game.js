@@ -108,8 +108,6 @@ var setupGame = function(stage) {
         }
     };
 
-    console.log(viewport.dimensions.y);
-
     canvas.width = viewport.dimensions.x - 5;
     canvas.height = viewport.dimensions.y - 5;
 };
@@ -184,13 +182,19 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
-    groundLevel = viewport.dimensions.y - (groundImage.height * scale);
+
+    var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
+
+    groundLevel = viewport.dimensions.y - (groundImage.height * scale * preScale);
 
     var asset = ground.asset = new createjs.Shape();
-    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
     asset.setTransform(0, 0, scale, scale);
 
-    ground.setDimensions(new Vector(groundImage.width, groundImage.height));
+    ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
     ground.setVelocity(new Vector(-4, 0));
     ground.startScrolling();
@@ -220,7 +224,7 @@ var createAvatar = function() {
         },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
         "animations": {
-            "run": [8, 11, "run", 1.5]
+            "run": [8, 11, "run", 0.5]
         }
     });
 
@@ -282,10 +286,13 @@ var createBackground = function() {
     var preScale = 1 / (((100 / groundLevel) * backgroundImage.height) / 100);
 
     var asset = background.asset = new createjs.Shape();
-    asset.setTransform(0, 0, scale, scale);
-    asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
 
-    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
+    asset.graphics.beginBitmapFill(backgroundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
+    asset.setTransform(0, 0, scale, scale);
+
+    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height).multiply(preScale));
     background.setVelocity(new Vector(-3, 0));
     background.startScrolling();
 
@@ -300,9 +307,14 @@ var createBackdrop = function() {
     var backdrop = new Entity();
     var backdropImage = loader.getResult("backdrop");
 
+    var preScale = 1 / (((100 / viewport.dimensions.y) * backdropImage.height) / 100);
+
     var asset = backdrop.asset = new createjs.Shape();
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
     asset.setTransform(0, 0, scale, scale);
-    asset.graphics.beginBitmapFill(backdropImage).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
 
     backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height));
     backdrop.setVelocity(new Vector(-1, 0));
@@ -316,7 +328,7 @@ var createBackdrop = function() {
 };
 
 var fpsHandler = {
-    fps: 10,
+    fps: 20,
     lastRender: 0,
     calculateChange: function(event) {
         if (!this.numTicks) {
@@ -406,6 +418,8 @@ var gameActions = {
 
 var playerId;
 var socket;
+var playerScores;
+var leaderboardStage;
 
 var connect = function() {
     socket = io.connect('/');
@@ -413,6 +427,21 @@ var connect = function() {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
         console.log(JSON.stringify(data));
+        for (var i = 0; i <= data.leaderBoard.length; i++) {
+            var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 15;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 100;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 400;
+            leaderboardStage.addChild(title);
+            leaderboardStage.update();
+        };
     });
 };
 
@@ -423,19 +452,20 @@ var gameOver = function(score) {
     });
 };
 
+
+
 var leaderboard = {
     connect: connect,
     gameOver: gameOver
 };
 
 function init() {
-
     leaderboard.connect();
 
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
 
-    var leaderboardStage = new createjs.Stage("leaderBoard");
+    leaderboardStage = new createjs.Stage("leaderBoard");
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
@@ -443,29 +473,29 @@ function init() {
 
     var lbTitleBar = new createjs.Shape();
     lbTitleBar.graphics.beginFill("#211B1B").drawRect(0, 0, 500, 50);
-    
-     var lbsubTitleBar = new createjs.Shape();
-    lbsubTitleBar.graphics.beginFill("#F25B15").drawRect(0, 50, 500, 30);   
+
+    var lbsubTitleBar = new createjs.Shape();
+    lbsubTitleBar.graphics.beginFill("#F25B15").drawRect(0, 50, 500, 30);
 
     var txt = new createjs.Text("Travelator Leaderboard", "17px Arial", "#FFF");
     txt.y = 15;
     txt.x = 15;
 
-    var  rankTitle= new createjs.Text("Rank", "15px Arial", "#DBD8E9");
+    var rankTitle = new createjs.Text("Rank", "15px Arial", "#DBD8E9");
     rankTitle.y = 55;
     rankTitle.x = 15;
 
-    var  playerTitle= new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
+    var playerTitle = new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
     playerTitle.y = 55;
-    playerTitle.x = 100;   
+    playerTitle.x = 100;
 
-    var  scoreTitle= new createjs.Text("Score", "15px Arial", "#DBD8E9");
+    var scoreTitle = new createjs.Text("Score", "15px Arial", "#DBD8E9");
     scoreTitle.y = 55;
-    scoreTitle.x = 400;   
+    scoreTitle.x = 400;
 
-     leaderboardStage.addChild(rect);
-     leaderboardStage.addChild(lbTitleBar);
-     leaderboardStage.addChild(lbsubTitleBar) 
+    leaderboardStage.addChild(rect);
+    leaderboardStage.addChild(lbTitleBar);
+    leaderboardStage.addChild(lbsubTitleBar)
     leaderboardStage.addChild(txt);
     leaderboardStage.addChild(rankTitle);
     leaderboardStage.addChild(playerTitle);
@@ -473,7 +503,7 @@ function init() {
 
     rect.addEventListener("click", function() {
         var playerScore = Math.floor((Math.random() * 1000));
-        leaderboard.gameOver(playerScore);
+        leaderboard.gameOver(playerScore)
     });
 
     leaderboardStage.update();
