@@ -148,9 +148,9 @@ var createPlane = function() {
     var getPlaneCoords = function () {
         var yOffset = randomBetween(-30, 30);
 
-        var y = (viewport.dimensions.y / 2) - 200 + yOffset;
+        var y = (viewport.dimensions.y / 2) + yOffset;
 
-        var x = viewport.dimensions.x + randomBetween(400, 900);
+        var x = viewport.dimensions.x + randomBetween(40, 90);
 
         return new Vector(x, y);
     };
