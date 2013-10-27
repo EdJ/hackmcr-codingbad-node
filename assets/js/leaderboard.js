@@ -7,7 +7,7 @@ var leaderboard = {
             id: playerId,
             score: score
         });
-    };
+    }
 };
 
 
@@ -24,11 +24,11 @@ var setupLeaderBoard = function() {
             localStorage.setItem('playerId', playerId);
             console.log(JSON.stringify(data));
 
-            for (var i = 0; i <= scoreTextEntities.length; i++) {
+            for (var i = 0; i < scoreTextEntities.length; i++) {
                 leaderboardStage.removeChild(scoreTextEntities[i])
             }
 
-            for (var i = 0; i <= data.leaderBoard.length; i++) {
+            for (var i = 0; i < data.leaderBoard.length; i++) {
                 var title = new createjs.Text(i + 1, "18px Arial", "#6C5D75");
                 title.y = 80 + (20 * i);
                 title.x = 15;
