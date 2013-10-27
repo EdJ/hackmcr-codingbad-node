@@ -59,10 +59,10 @@ var loadAssets = function(handleComplete) {
         id: 'suitcase1'
     },{
         src: 'images/suitcase2.png',
-        id: 'suitcase1'
+        id: 'suitcase2'
     },{
         src: 'images/suitcase3.png',
-        id: 'suitcase1'
+        id: 'suitcase3'
     }];
 
     loader = new createjs.LoadQueue(false);

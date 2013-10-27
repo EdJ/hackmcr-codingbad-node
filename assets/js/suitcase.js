@@ -1,6 +1,6 @@
 var startSuitcaseSpawner = function() {
     createjs.Ticker.addEventListener('tick', function() {
-        if (Math.random() > 0.999) {
+        if (Math.random() > (1-gameSettings.suitcaseSpawnProbability)) {
             createSuitcase();
         }
     });
@@ -10,6 +10,7 @@ var createSuitcase = function() {
     var suitcase = new Entity();
 
     var suitcaseType = randomBetween(1, 3);
+    console.log("Spawning suitcase type: " + suitcaseType);
     var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase' + suitcaseType));
     asset.setTransform(0, 0, scale, scale);
 
