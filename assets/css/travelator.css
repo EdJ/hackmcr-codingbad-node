@@ -41,10 +41,10 @@ html, body {
   color: #ffffff;
   text-shadow: 0 1px 1px #000;
   background: #6a6b72;
-  background: -moz-linear-gradient(#6a6b72 0%, #4c4e53 100%);
+  /*background: -moz-linear-gradient(#6a6b72 0%, #4c4e53 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #6a6b72), color-stop(100%, #4c4e53));
   background: -webkit-linear-gradient(#6a6b72 0%, #4c4e53 100%);
-  background: linear-gradient(#6a6b72 0%, #4c4e53 100%);
+  background: linear-gradient(#6a6b72 0%, #4c4e53 100%);*/
 }
 #cssmenu > ul > li > a:hover {
   text-decoration: none;
@@ -53,11 +53,11 @@ html, body {
   border-bottom: none;
 }
 #cssmenu > ul > li.active > a {
-  background: #a5ce27;
+ /* background: #a5ce27;
   background: -moz-linear-gradient(#a5ce27 0%, #709400 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a5ce27), color-stop(100%, #709400));
   background: -webkit-linear-gradient(#a5ce27 0%, #709400 100%);
-  background: linear-gradient(#a5ce27 0%, #709400 100%);
+  background: linear-gradient(#a5ce27 0%, #709400 100%);*/
   color: #4e5800;
   text-shadow: 0 1px 1px #a5ce27;
 }
