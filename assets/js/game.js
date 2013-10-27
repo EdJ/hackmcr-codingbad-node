@@ -129,7 +129,7 @@ var loadAssets = function(handleComplete) {
         src: 'images/bloke.png',
         id: 'avatar'
     }, {
-        src: 'images/background.png',
+        src: 'images/background.PNG',
         id: 'background'
     }];
 
