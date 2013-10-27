@@ -1,7 +1,10 @@
 var startSuitcaseSpawner = function() {
+    var coolingOffPeriodRemaining = 0;
     createjs.Ticker.addEventListener('tick', function() {
-        if (Math.random() > (1-gameSettings.suitcaseSpawnProbability)) {
+        coolingOffPeriodRemaining--;
+        if ((Math.random() > (1-gameSettings.suitcaseSpawnProbability)) && (coolingOffPeriodRemaining < 0)) {
             createSuitcase();
+            coolingOffPeriodRemaining = gameSettings.coolingOffPeriod;
         }
     });
 };
