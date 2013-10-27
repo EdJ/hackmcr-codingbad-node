@@ -55,6 +55,9 @@ var loadAssets = function(handleComplete) {
     },{
         src: 'images/securityBloke.png',
         id: 'securityBloke'
+    },{
+        src: 'images/suitcase.png',
+        id: 'suitcase'
     }];
 
     loader = new createjs.LoadQueue(false);
