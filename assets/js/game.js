@@ -353,14 +353,15 @@ var createBackgroundAssets = function () {
         return new Vector(x, y);
     };
 
-    var firstTime = true;
     var onScreen = function (startX) {
+        var firstTime = true;
+
         return function () {
-            if (firstTime) {
-                firstTime = false;
+            if (!firstTime) {
                 return getItemCoords();
             }
 
+            firstTime = false;
             var x = startX;
             var y = groundLevel - (80 * scale);
             return new Vector(x, y);
