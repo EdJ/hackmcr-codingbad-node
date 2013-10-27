@@ -9,9 +9,8 @@ var createBackdrop = function() {
     matrix.scale(preScale, preScale);
 
     asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
-    asset.setTransform(0, 0, scale, scale);
 
-    backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height));
+    backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height).multiply(preScale));
     backdrop.setVelocity(new Vector(gameSettings.backdropSpeed, 0));
     backdrop.startScrolling();
 

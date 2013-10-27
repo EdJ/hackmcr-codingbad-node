@@ -1,5 +1,3 @@
-
-
 var createBackground = function() {
     var background = new Entity();
     var backgroundImage = loader.getResult("background");
@@ -11,7 +9,6 @@ var createBackground = function() {
     matrix.scale(preScale, preScale);
 
     asset.graphics.beginBitmapFill(backgroundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
-    asset.setTransform(0, 0, scale, scale);
 
     background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height).multiply(preScale));
     background.setVelocity(new Vector(gameSettings.backgroundSpeed, 0));

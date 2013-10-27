@@ -7,32 +7,24 @@ var startSuitcaseSpawner = function() {
             coolingOffPeriodRemaining = gameSettings.coolingOffPeriod;
         }
     });
-}
+};
 
 var createSuitcase = function() {
     var suitcase = new Entity();
 
     var suitcaseType = randomBetween(1, 3);
-    console.log("Spawning suitcase type: " + suitcaseType);
-    var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase' + suitcaseType));
-    asset.setTransform(0, 0, scale, scale);
+    var suitcaseImage = loader.getResult('suitcase' + suitcaseType);
+    var asset = suitcase.asset = new createjs.Bitmap(suitcaseImage);
+    var xPos = groundLevel - (suitcaseImage.height * 0.5);
+    asset.setTransform(0, 0, scale * 0.5, scale * 0.5);
 
-    suitcase.setPosition(new Vector(viewport.dimensions.x, 200));
+    suitcase.setPosition(new Vector(viewport.dimensions.x, xPos));
     suitcase.setVelocity(new Vector(gameSettings.groundSpeed, 0));
     suitcase.startScrolling();
 
     stage.addChild(asset);
 
-    var getSuitcaseCoords = function() {
-        var xOffset = randomBetween(100, viewport.dimensions.x - 100);
-        var y = -800;
-
-        var x = xOffset;
-
-        return new Vector(x, y);
-    };
-
-
+    obstacles.push(suitcase);
 
     entities.push(suitcase);
 
