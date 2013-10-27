@@ -1,25 +1,23 @@
 var startSuitcaseSpawner = function() {
-    var coolingOffPeriodRemaining = 0;
-    createjs.Ticker.addEventListener('tick', function() {
-        coolingOffPeriodRemaining--;
-        if ((Math.random() > (1-gameSettings.suitcaseSpawnProbability)) && (coolingOffPeriodRemaining < 0)) {
-            createSuitcase();
-            coolingOffPeriodRemaining = gameSettings.coolingOffPeriod;
-        }
-    });
+    var lastOffset = 0;
+    for (var i = 10; i--;) {
+        lastOffset = createSuitcase(lastOffset);
+    }
 };
 
-var createSuitcase = function() {
+var createSuitcase = function(lastOffset) {
     var suitcase = new Entity();
 
     var suitcaseType = randomBetween(1, 3);
     var suitcaseImage = loader.getResult('suitcase' + suitcaseType);
     var asset = suitcase.asset = new createjs.Bitmap(suitcaseImage);
-    var xPos = groundLevel - (suitcaseImage.height * 0.5 * scale);
+    var yPos = groundLevel - (suitcaseImage.height * 0.5 * scale);
     asset.setTransform(0, 0, 0.5 * scale, 0.5 * scale);
 
-    suitcase.setPosition(new Vector(viewport.dimensions.x, xPos));
-    suitcase.setVelocity(new Vector(gameSettings.groundSpeed, 0));
+    var newOffset = randomBetween(500, 3000);
+
+    suitcase.setPosition(new Vector(viewport.dimensions.x + lastOffset + newOffset, yPos));
+    suitcase.setVelocity(new Vector(gameSettings.groundSpeed + (randomBetween(1, 3) - 2), 0));
     suitcase.startScrolling();
 
     stage.addChild(asset);
@@ -28,5 +26,5 @@ var createSuitcase = function() {
 
     entities.push(suitcase);
 
-    return suitcase;
+    return newOffset;
 };
