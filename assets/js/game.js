@@ -205,6 +205,7 @@ var createSecurityAvatar = function() {
     gameActions._oldJump = gameActions.jump;
 
     gameActions.jump = function() {
+        Sound.play('GameSpawn');
         gameActions._oldJump();
         setTimeout(function () {
             avatar.jump();
@@ -345,9 +346,9 @@ var attachInput = function(gameActions) {
             if (Math.random() > 0.985) {
                 gameActions.jump();
             }
-            if (Math.random() > 0.995) {
-                $("a#showLeaderboard").click();
-            }
+            // if (Math.random() > 0.995) {
+            //     $("a#showLeaderboard").click();
+            // }
         });
     };
 
@@ -410,7 +411,7 @@ var outsideWindowAssets = function () {
         return new Vector(x, y);
     };
 
-    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 4, 0), new Vector(0, 0), 1.5);
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 3, 0), new Vector(0, 0), 1.5);
 };
 
 function init() {
