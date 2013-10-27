@@ -2,7 +2,6 @@ var stage;
 var loader;
 var canvas;
 var viewport;
-var loader;
 
 var randomBetween = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
@@ -57,7 +56,13 @@ var loadAssets = function(handleComplete) {
         id: 'securityBloke'
     },{
         src: 'images/suitcase1.png',
-        id: 'suitcase'
+        id: 'suitcase1'
+    },{
+        src: 'images/suitcase2.png',
+        id: 'suitcase1'
+    },{
+        src: 'images/suitcase3.png',
+        id: 'suitcase1'
     }];
 
     loader = new createjs.LoadQueue(false);

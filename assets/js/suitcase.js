@@ -9,7 +9,8 @@ var startSuitcaseSpawner = function() {
 var createSuitcase = function() {
     var suitcase = new Entity();
 
-    var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase'));
+    var suitcaseType = randomBetween(1,3);
+    var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase'+suitcaseType));
     asset.setTransform(0, 0, scale, scale);
 
     suitcase.setPosition(new Vector(viewport.dimensions.x, 200));
