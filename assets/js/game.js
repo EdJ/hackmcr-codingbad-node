@@ -179,13 +179,19 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
-    groundLevel = viewport.dimensions.y - (groundImage.height * scale);
+
+    var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
+
+    groundLevel = viewport.dimensions.y - (groundImage.height * scale * preScale);
 
     var asset = ground.asset = new createjs.Shape();
-    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
     asset.setTransform(0, 0, scale, scale);
 
-    ground.setDimensions(new Vector(groundImage.width, groundImage.height));
+    ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
     ground.setVelocity(new Vector(-4, 0));
     ground.startScrolling();
@@ -238,7 +244,6 @@ var createBackground = function() {
     var backgroundImage = loader.getResult("background");
 
     var preScale = 1 / (((100 / groundLevel) * backgroundImage.height) / 100);
-    backgroundImage.scaleX = 0.1;
 
     var asset = background.asset = new createjs.Shape();
     var matrix = new createjs.Matrix2D
@@ -262,9 +267,14 @@ var createBackdrop = function() {
     var backdrop = new Entity();
     var backdropImage = loader.getResult("backdrop");
 
+    var preScale = 1 / (((100 / viewport.dimensions.y) * backdropImage.height) / 100);
+
     var asset = backdrop.asset = new createjs.Shape();
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
     asset.setTransform(0, 0, scale, scale);
-    asset.graphics.beginBitmapFill(backdropImage).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
 
     backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height));
     backdrop.setVelocity(new Vector(-1, 0));
