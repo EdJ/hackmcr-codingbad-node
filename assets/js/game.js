@@ -312,7 +312,7 @@ function init() {
 
         createSecurityAvatar();
 
-        createSuitcase();
+        startSuitcaseSpawner();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
