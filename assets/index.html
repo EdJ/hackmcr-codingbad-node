@@ -15,6 +15,18 @@ $(function() {
         else
             $("#leaderBoard").css('visibility', 'hidden');
     })
+    
+    $.QueryString = (function(a) {
+        if (a == "") return {};
+        var b = {};
+        for (var i = 0; i < a.length; ++i)
+        {
+            var p=a[i].split('=');
+            if (p.length != 2) continue;
+            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+        }
+        return b;
+    })(window.location.search.substr(1).split('&'))
 
 });
 </script>
@@ -27,6 +39,9 @@ $(function() {
                     <li class='first'>
                         <a  id="StartGame">
                             <span>Start Game</span>
+                    <li class='last'>
+                        <a href='#'>
+                            <span>New Game</span>
                         </a>
                     </li>
                     <li class='has-sub'>
@@ -44,6 +59,7 @@ $(function() {
         </div>
         <canvas id="travelatorCanvas"></canvas>
         <canvas id="leaderBoard" width="500" height="300"></canvas>
+        <canvas id="scoreBoard" width="100" height="30"></canvas>
     </div>
     <script src="js/conzole/conzole.js"></script>
     <script src="js/preloadjs-NEXT.min.js"></script>
