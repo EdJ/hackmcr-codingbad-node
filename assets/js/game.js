@@ -19,6 +19,8 @@ var groundLevel = 0;
 var playerScore = 0;
 var actualScore;
 var score = 0;
+   
+var audioPath = "../_assets_soundjs/";
 
 var setupGame = function(stage) {
     canvas = stage.canvas;
@@ -364,10 +366,10 @@ function init() {
         return;
     }
 
-    var audioPath = "../_assets_soundjs/";
+ 
     var manifest = [{
         id: "Music",
-        src: audioPath + "18-machinae_supremacy-lord_krutors_dominion.mp3|" + audioPath + "18-machinae_supremacy-lord_krutors_dominion.ogg"
+        src: audioPath + "M-GameBG.mp3|" + audioPath + "M-GameBG.ogg"
     }];
 
     createjs.Sound.addEventListener("loadComplete", handleLoad);
