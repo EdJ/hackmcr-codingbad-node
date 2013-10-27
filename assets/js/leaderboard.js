@@ -55,7 +55,7 @@ var setupLeaderBoard = function() {
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
-    rect.graphics.beginFill("#CECECE").drawRect(0, 0, 500, 700);
+    rect.graphics.beginFill("#CECECE").drawRect(0, 0, 500, 300);
 
     var lbTitleBar = new createjs.Shape();
     lbTitleBar.graphics.beginFill("#211B1B").drawRect(0, 0, 500, 50);
