@@ -8,11 +8,7 @@ var randomBetween = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
 };
 
-var plane = {};
-var planes = [];
-var ground = {};
 var entities = [];
-
 
 var scale = 1;
 
@@ -112,8 +108,6 @@ var setupGame = function(stage) {
         }
     };
 
-    console.log(viewport.dimensions.y);
-
     canvas.width = viewport.dimensions.x - 5;
     canvas.height = viewport.dimensions.y - 5;
 };
@@ -131,6 +125,9 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/background.PNG',
         id: 'background'
+    }, {
+        src: 'images/backdrop.jpg',
+        id: 'backdrop'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -146,18 +143,33 @@ var createPlane = function() {
 
     stage.addChild(asset);
 
-    var x = randomBetween(1, viewport.dimensions.x);
+    var getPlaneCoords = function () {
+        var yOffset = randomBetween(-30, 30);
 
-    plane.setPosition(new Vector(x, viewport.dimensions.y));
+        var y = (viewport.dimensions.y / 2) + yOffset;
 
-    var xVel = randomBetween(-20, 20);
-    var yVel = randomBetween(-4, 4);
+        var x = viewport.dimensions.x + randomBetween(40, 90);
 
-    plane.setVelocity(new Vector(-0.3, -0.1));
-    plane.setMaxVelocity(new Vector(xVel, yVel));
-    plane.setAcceleration(new Vector(-0.002, -0.002));
+        return new Vector(x, y);
+    };
 
-    planes.push(plane);
+    plane.setPosition(getPlaneCoords());
+
+    plane.setVelocity(new Vector(-3, 0));
+    plane.setMaxVelocity(new Vector(20, 0));
+    plane.setAcceleration(new Vector(-0.2, 0));
+
+    plane._oldUpdate = plane.update;
+
+    plane.update = function () {
+        this._oldUpdate();
+
+        if (this._position.x < -400) {
+            plane.setPosition(getPlaneCoords());
+            plane.setVelocity(new Vector(-3, 0));
+        }
+    };
+
     entities.push(plane);
 
     return plane;
@@ -167,13 +179,19 @@ var createGround = function() {
     var ground = new Entity();
     var groundImage = loader.getResult("ground");
 
-    groundLevel = viewport.dimensions.y - (groundImage.height * scale);
+
+    var preScale = 1 / (((100 / (viewport.dimensions.y / 7)) * groundImage.height) / 100);
+
+    groundLevel = viewport.dimensions.y - (groundImage.height * scale * preScale);
 
     var asset = ground.asset = new createjs.Shape();
-    asset.graphics.beginBitmapFill(groundImage).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(groundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + groundImage.width, groundImage.height);
     asset.setTransform(0, 0, scale, scale);
 
-    ground.setDimensions(new Vector(groundImage.width, groundImage.height));
+    ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
     ground.setVelocity(new Vector(-4, 0));
     ground.startScrolling();
@@ -203,7 +221,7 @@ var createAvatar = function() {
         },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
         "animations": {
-            "run": [8, 11, "run", 1.5]
+            "run": [8, 11, "run", 0.5]
         }
     });
 
@@ -221,18 +239,21 @@ var createAvatar = function() {
     return avatar;
 };
 
-
-function createBackground() {
-
+var createBackground = function() {
     var background = new Entity();
     var backgroundImage = loader.getResult("background");
 
-    var asset = background.asset = new createjs.Shape();
-    asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width, backgroundImage.height);
+    var preScale = 1 / (((100 / groundLevel) * backgroundImage.height) / 100);
 
-    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
-    background.setPosition(new Vector(0, groundLevel - backgroundImage.height));
-    background.setVelocity(new Vector(-4, 0));
+    var asset = background.asset = new createjs.Shape();
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(backgroundImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width * preScale, backgroundImage.height * preScale);
+    asset.setTransform(0, 0, scale, scale);
+
+    background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height).multiply(preScale));
+    background.setVelocity(new Vector(-3, 0));
     background.startScrolling();
 
     stage.addChild(asset);
@@ -242,8 +263,32 @@ function createBackground() {
     return background;
 };
 
+var createBackdrop = function() {
+    var backdrop = new Entity();
+    var backdropImage = loader.getResult("backdrop");
+
+    var preScale = 1 / (((100 / viewport.dimensions.y) * backdropImage.height) / 100);
+
+    var asset = backdrop.asset = new createjs.Shape();
+    var matrix = new createjs.Matrix2D
+    matrix.scale(preScale, preScale);
+
+    asset.graphics.beginBitmapFill(backdropImage, 'repeat', matrix).drawRect(0, 0, viewport.dimensions.x + backdropImage.width, backdropImage.height);
+    asset.setTransform(0, 0, scale, scale);
+
+    backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height));
+    backdrop.setVelocity(new Vector(-1, 0));
+    backdrop.startScrolling();
+
+    stage.addChild(asset);
+
+    entities.push(backdrop);
+
+    return backdrop;
+};
+
 var fpsHandler = {
-    fps: 10,
+    fps: 20,
     lastRender: 0,
     calculateChange: function(event) {
         if (!this.numTicks) {
@@ -328,11 +373,7 @@ var attachInput = function(gameActions) {
 };
 
 var gameActions = {
-    resetPlane: function() {
-        var plane = randomBetween(0, planes.length - 1);
-
-        planes[plane].setPosition(new Vector(viewport.dimensions.x - 100, viewport.dimensions.y));
-    }
+    resetPlane: function() {}
 };
 
 var playerId;
@@ -345,7 +386,7 @@ var connect = function() {
     socket.on('player', function(data) {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
-        console.log(JSON.stringify(data.leaderBoard));
+        console.log(JSON.stringify(data));
         for (var i = 0; i <= data.leaderBoard.length; i++) {
             var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
             title.y = 80 + (20*i);
@@ -379,7 +420,6 @@ var leaderboard = {
 };
 
 function init() {
-
     leaderboard.connect();
 
     stage = new createjs.Stage("travelatorCanvas");
@@ -430,20 +470,17 @@ function init() {
 
     loadAssets(function() {
         var square = new createjs.Shape();
-
         square.graphics.beginFill("#8fb0d8").drawRect(0, 0, viewport.dimensions.x, viewport.dimensions.y);
 
         stage.addChild(square);
 
+        createBackdrop();
 
-        var numberOfPlanes = randomBetween(1, 10);
+        createPlane();
 
-        for (var i = numberOfPlanes; i--;) {
-            createPlane();
-        }
+        createGround();
 
-        ground = createGround();
-        background = createBackground();
+        createBackground();
 
         createAvatar();
 
