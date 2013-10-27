@@ -9,12 +9,12 @@ var startSuitcaseSpawner = function() {
 var createSuitcase = function() {
     var suitcase = new Entity();
 
-    var suitcaseType = randomBetween(1,3);
-    var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase'+suitcaseType));
+    var suitcaseType = randomBetween(1, 3);
+    var asset = suitcase.asset = new createjs.Bitmap(loader.getResult('suitcase' + suitcaseType));
     asset.setTransform(0, 0, scale, scale);
 
     suitcase.setPosition(new Vector(viewport.dimensions.x, 200));
-    suitcase.setVelocity(new Vector(-4, 0));
+    suitcase.setVelocity(new Vector(gameSettings.groundSpeed, 0));
     suitcase.startScrolling();
 
     stage.addChild(asset);

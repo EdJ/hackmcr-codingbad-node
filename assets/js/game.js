@@ -88,7 +88,7 @@ var createGround = function() {
 
     ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
-    ground.setVelocity(new Vector(-4, 0));
+    ground.setVelocity(new Vector(gameSettings.groundSpeed, 0));
     ground.startScrolling();
 
     stage.addChild(asset);
