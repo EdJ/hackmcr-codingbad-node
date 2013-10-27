@@ -70,6 +70,12 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/grassPlant.png',
         id: 'grassPlant'
+    },{
+        src: 'images/travelator.png',
+        id: 'travelator'
+    },{
+        src: 'images/tree2.png',
+        id: 'tree'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -373,6 +379,26 @@ var createBackgroundAssets = function () {
     createAsset('grassPlant', onScreen(partial), new Vector(gameSettings.groundSpeed + 1, 0), new Vector(0, 0));
     createAsset('grassPlant', onScreen(partial * 2.3), new Vector(gameSettings.groundSpeed + 1.5, 0), new Vector(0, 0));
     createAsset('grassPlant', onScreen(partial * 1.7), new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
+
+    var travelatorPosition = function () {
+        var y = groundLevel - (80 * scale);
+        var x = viewport.dimensions.x + randomBetween(15, 450);
+
+        return new Vector(x, y);
+    };
+
+    createAsset('travelator', travelatorPosition, new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
+};
+
+var outsideWindowAssets = function () {
+    var treePosition = function () {
+        var y = groundLevel - ((viewport.dimensions.y / 2) * scale);
+        var x = viewport.dimensions.x + randomBetween(15, 450);
+
+        return new Vector(x, y);
+    };
+
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed - 4, 0), new Vector(0, 0), 2.5);
 };
 
 function init() {
@@ -401,6 +427,8 @@ function init() {
         createPlane();
 
         playBackgroundMusic();
+
+        outsideWindowAssets();
 
         createGround();
 
