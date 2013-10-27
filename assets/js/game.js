@@ -370,7 +370,8 @@ var socket;
 var connect = function() {
     socket = io.connect('/');
     socket.on('player', function(data) {
-        playerId = data.id;
+        playerId = localStorage.getItem('playerId') || data.id;
+        localStorage.setItem('playerId', playerId);
         console.log(JSON.stringify(data));
     });
 };
@@ -398,8 +399,37 @@ function init() {
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
-    rect.graphics.beginFill("#ff0000").drawRect(0, 0, 200, 40);
-    leaderboardStage.addChild(rect);
+    rect.graphics.beginFill("#E0CECE").drawRect(0, 0, 500, 700);
+
+    var lbTitleBar = new createjs.Shape();
+    lbTitleBar.graphics.beginFill("#211B1B").drawRect(0, 0, 500, 50);
+    
+     var lbsubTitleBar = new createjs.Shape();
+    lbsubTitleBar.graphics.beginFill("#F25B15").drawRect(0, 50, 500, 30);   
+
+    var txt = new createjs.Text("Travelator Leaderboard", "17px Arial", "#FFF");
+    txt.y = 15;
+    txt.x = 15;
+
+    var  rankTitle= new createjs.Text("Rank", "15px Arial", "#DBD8E9");
+    rankTitle.y = 55;
+    rankTitle.x = 15;
+
+    var  playerTitle= new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
+    playerTitle.y = 55;
+    playerTitle.x = 100;   
+
+    var  scoreTitle= new createjs.Text("Score", "15px Arial", "#DBD8E9");
+    scoreTitle.y = 55;
+    scoreTitle.x = 400;   
+
+     leaderboardStage.addChild(rect);
+     leaderboardStage.addChild(lbTitleBar);
+     leaderboardStage.addChild(lbsubTitleBar) 
+    leaderboardStage.addChild(txt);
+    leaderboardStage.addChild(rankTitle);
+    leaderboardStage.addChild(playerTitle);
+    leaderboardStage.addChild(scoreTitle);
 
     rect.addEventListener("click", function() {
         var playerScore = Math.floor((Math.random() * 1000));
