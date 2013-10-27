@@ -1,5 +1,6 @@
 var createPlane = function() {	
     var getPlaneCoords = function () {
+    	Sound.play('aeroplane');
         var yOffset = randomBetween(-30, 30);
 
         var y = (viewport.dimensions.y / 2) + yOffset;
