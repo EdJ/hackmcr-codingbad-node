@@ -14,7 +14,7 @@ var createBackground = function() {
     asset.setTransform(0, 0, scale, scale);
 
     background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height).multiply(preScale));
-    background.setVelocity(new Vector(-3, 0));
+    background.setVelocity(new Vector(gameSettings.backgroundSpeed, 0));
     background.startScrolling();
 
     stage.addChild(asset);

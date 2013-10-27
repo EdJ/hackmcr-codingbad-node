@@ -2,7 +2,6 @@ var stage;
 var loader;
 var canvas;
 var viewport;
-var loader;
 
 var randomBetween = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
@@ -61,7 +60,13 @@ var loadAssets = function(handleComplete) {
         id: 'securityBloke'
     },{
         src: 'images/suitcase1.png',
-        id: 'suitcase'
+        id: 'suitcase1'
+    },{
+        src: 'images/suitcase2.png',
+        id: 'suitcase2'
+    },{
+        src: 'images/suitcase3.png',
+        id: 'suitcase3'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -87,7 +92,7 @@ var createGround = function() {
 
     ground.setDimensions(new Vector(groundImage.width, groundImage.height).multiply(preScale));
     ground.setPosition(new Vector(0, viewport.dimensions.y - groundImage.height));
-    ground.setVelocity(new Vector(-4, 0));
+    ground.setVelocity(new Vector(gameSettings.groundSpeed, 0));
     ground.startScrolling();
 
     stage.addChild(asset);
@@ -306,6 +311,9 @@ var attachInput = function(gameActions) {
             if (Math.random() > 0.90) {
                 gameActions.jump();
             }
+            if (Math.random() > 0.995) {
+                $("a#showLeaderboard").click();
+            }
         });
     };
 
@@ -343,7 +351,7 @@ function init() {
 
         createSecurityAvatar();
 
-        createSuitcase();
+        startSuitcaseSpawner();
 
         addScoreBoard();
 

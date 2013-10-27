@@ -12,7 +12,7 @@ var createBackdrop = function() {
     asset.setTransform(0, 0, scale, scale);
 
     backdrop.setDimensions(new Vector(backdropImage.width, backdropImage.height));
-    backdrop.setVelocity(new Vector(-1, 0));
+    backdrop.setVelocity(new Vector(gameSettings.backdropSpeed, 0));
     backdrop.startScrolling();
 
     stage.addChild(asset);
