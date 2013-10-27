@@ -76,6 +76,9 @@ var loadAssets = function(handleComplete) {
     },{
         src: 'images/tree1.png',
         id: 'tree'
+    }, {
+        src: 'images/plane1small.png',
+        id: 'redPlane'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -433,7 +436,8 @@ function init() {
 
         createBackdrop('backdrop', gameSettings.backdropSpeed);
 
-        createPlane();
+        createPlane('plane', 0.5);
+        createPlane('redPlane', 0.3);
 
         playBackgroundMusic();
 
