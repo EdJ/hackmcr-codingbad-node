@@ -70,6 +70,12 @@ var loadAssets = function(handleComplete) {
     }, {
         src: 'images/grassPlant.png',
         id: 'grassPlant'
+    },{
+        src: 'images/travelator.png',
+        id: 'travelator'
+    },{
+        src: 'images/tree1.png',
+        id: 'tree'
     }];
 
     loader = new createjs.LoadQueue(false);
@@ -382,6 +388,28 @@ var createBackgroundAssets = function () {
     createAsset('grassPlant', onScreen(partial * 1.7), new Vector(gameSettings.groundSpeed + 0.3, 0), new Vector(0, 0));
 };
 
+var foregroundAssets = function () {
+    var travelatorPosition = function () {
+        var y = groundLevel - (43 * scale);
+        var x = viewport.dimensions.x + randomBetween(15, 450);
+
+        return new Vector(x, y);
+    };
+
+    createAsset('travelator', travelatorPosition, new Vector(gameSettings.groundSpeed - 0.5, 0), new Vector(0, 0), 0.5);
+};
+
+var outsideWindowAssets = function () {
+    var treePosition = function () {
+        var y = groundLevel - ((viewport.dimensions.y / 2) * scale);
+        var x = viewport.dimensions.x + randomBetween(15, 450);
+
+        return new Vector(x, y);
+    };
+
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed - 4, 0), new Vector(0, 0), 2.5);
+};
+
 function init() {
     if ($.QueryString.chimput) {
         localStorage.playerName = "Chimput";
@@ -409,6 +437,8 @@ function init() {
 
         playBackgroundMusic();
 
+        outsideWindowAssets();
+
         createGround();
 
         createBackdrop('background', gameSettings.backgroundSpeed);
@@ -420,6 +450,8 @@ function init() {
         createAvatar();
 
         createSecurityAvatar();
+
+        foregroundAssets();
 
         addScoreBoard();
 
