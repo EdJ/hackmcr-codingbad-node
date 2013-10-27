@@ -281,10 +281,17 @@ endGame = function() {
 
     showFailedBanner();
 
+    setTwitterTweet();
+
     if ($.QueryString.chimput) {
         setTimeout(function() { location.reload(); }, 5000);
     }
 };
+
+var setTwitterTweet = function() {
+    $("#tweetButton").attr("data-text", "I've just scored " + score + " on Travelator. Can you beat that?");
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+}
 
 var onTick = function(event) {
     if (stopUpdating) {
@@ -403,7 +410,7 @@ var outsideWindowAssets = function () {
         return new Vector(x, y);
     };
 
-    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed - 4, 0), new Vector(0, 0), 2.5);
+    createAsset('tree', treePosition, new Vector(gameSettings.groundSpeed + 4, 0), new Vector(0, 0), 1.5);
 };
 
 function init() {
