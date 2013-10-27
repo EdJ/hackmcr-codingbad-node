@@ -355,6 +355,8 @@ function init() {
 
         addScoreBoard();
 
+        showStartBanner();
+
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
         attachInput(gameActions);
