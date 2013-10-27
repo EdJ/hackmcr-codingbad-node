@@ -231,7 +231,7 @@ function createBackground() {
     asset.graphics.beginBitmapFill(backgroundImage).drawRect(0, 0, viewport.dimensions.x + backgroundImage.width, backgroundImage.height);
 
     background.setDimensions(new Vector(backgroundImage.width, backgroundImage.height));
-    background.setPosition(new Vector(0, groundLevel - backgroundImage.height ));
+    background.setPosition(new Vector(0, groundLevel - backgroundImage.height));
     background.setVelocity(new Vector(-4, 0));
     background.startScrolling();
 
@@ -337,13 +337,30 @@ var gameActions = {
 
 var playerId;
 var socket;
+var playerScores;
+var leaderboardStage;
 
 var connect = function() {
     socket = io.connect('/');
     socket.on('player', function(data) {
         playerId = localStorage.getItem('playerId') || data.id;
         localStorage.setItem('playerId', playerId);
-        console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data.leaderBoard));
+        for (var i = 0; i <= data.leaderBoard.length; i++) {
+            var title = new createjs.Text(i+1, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 15;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].id, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 100;
+            leaderboardStage.addChild(title);
+            var title = new createjs.Text(data.leaderBoard[i].score, "15px Arial", "#3BD8E9");
+            title.y = 80 + (20*i);
+            title.x = 400;
+            leaderboardStage.addChild(title);
+            leaderboardStage.update();
+        };
     });
 };
 
@@ -353,6 +370,8 @@ var gameOver = function(score) {
         score: score
     });
 };
+
+
 
 var leaderboard = {
     connect: connect,
@@ -366,7 +385,7 @@ function init() {
     stage = new createjs.Stage("travelatorCanvas");
     setupGame(stage);
 
-    var leaderboardStage = new createjs.Stage("leaderBoard");
+    leaderboardStage = new createjs.Stage("leaderBoard");
 
     leaderboardStage.mouseEventsEnabled = true;
     var rect = new createjs.Shape();
@@ -374,29 +393,29 @@ function init() {
 
     var lbTitleBar = new createjs.Shape();
     lbTitleBar.graphics.beginFill("#211B1B").drawRect(0, 0, 500, 50);
-    
-     var lbsubTitleBar = new createjs.Shape();
-    lbsubTitleBar.graphics.beginFill("#F25B15").drawRect(0, 50, 500, 30);   
+
+    var lbsubTitleBar = new createjs.Shape();
+    lbsubTitleBar.graphics.beginFill("#F25B15").drawRect(0, 50, 500, 30);
 
     var txt = new createjs.Text("Travelator Leaderboard", "17px Arial", "#FFF");
     txt.y = 15;
     txt.x = 15;
 
-    var  rankTitle= new createjs.Text("Rank", "15px Arial", "#DBD8E9");
+    var rankTitle = new createjs.Text("Rank", "15px Arial", "#DBD8E9");
     rankTitle.y = 55;
     rankTitle.x = 15;
 
-    var  playerTitle= new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
+    var playerTitle = new createjs.Text("Player Id", "15px Arial", "#DBD8E9");
     playerTitle.y = 55;
-    playerTitle.x = 100;   
+    playerTitle.x = 100;
 
-    var  scoreTitle= new createjs.Text("Score", "15px Arial", "#DBD8E9");
+    var scoreTitle = new createjs.Text("Score", "15px Arial", "#DBD8E9");
     scoreTitle.y = 55;
-    scoreTitle.x = 400;   
+    scoreTitle.x = 400;
 
-     leaderboardStage.addChild(rect);
-     leaderboardStage.addChild(lbTitleBar);
-     leaderboardStage.addChild(lbsubTitleBar) 
+    leaderboardStage.addChild(rect);
+    leaderboardStage.addChild(lbTitleBar);
+    leaderboardStage.addChild(lbsubTitleBar)
     leaderboardStage.addChild(txt);
     leaderboardStage.addChild(rankTitle);
     leaderboardStage.addChild(playerTitle);
@@ -404,7 +423,7 @@ function init() {
 
     rect.addEventListener("click", function() {
         var playerScore = Math.floor((Math.random() * 1000));
-        leaderboard.gameOver(playerScore);
+        leaderboard.gameOver(playerScore)
     });
 
     leaderboardStage.update();
@@ -425,7 +444,7 @@ function init() {
 
         ground = createGround();
         background = createBackground();
-        
+
         createAvatar();
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
