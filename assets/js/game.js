@@ -260,7 +260,7 @@ var createSecurityAvatar = function() {
         },
         // define two animations, run (loops, 1.5x speed) and jump (returns to run):
         "animations": {
-            "run": [12, 15, "run", 1.5]
+            "run": [11, 15, "run", 0.5]
         }
     });
 
