@@ -236,43 +236,7 @@ var createAvatar = function() {
 
     avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
     avatar.setPosition(new Vector(300, groundLevel - avatarImage.height));
-
-    stage.addChild(avatar.asset);
-
-    entities.push(avatar);
-
-    return avatar;
-};
-
-var createSecurityAvatar = function() {
-    var avatar = new Entity();
-    var avatarImage = {
-        width: 40,
-        height: 61
-    };
-
-    var data = new createjs.SpriteSheet({
-        "images": [loader.getResult("avatar")],
-        "frames": {
-            "regX": 0,
-            "height": avatarImage.height,
-            "count": 16,
-            "regY": 0,
-            "width": avatarImage.width
-        },
-        // define two animations, run (loops, 1.5x speed) and jump (returns to run):
-        "animations": {
-            "run": [12, 15, "run", 0.5]
-        }
-    });
-
-    avatar.asset = new createjs.Sprite(data, "run");
-    avatar.asset.setTransform(0, 0, scale, scale);
-    avatar.asset.framerate = fpsHandler.fps;
-
-    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
-    avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
-
+   
     avatar.jump = function () {
         if (this._jumping) {
             return;
@@ -309,6 +273,42 @@ var createSecurityAvatar = function() {
     gameActions.jump = function () {
         avatar.jump();
     };
+
+    return avatar;
+};
+
+var createSecurityAvatar = function() {
+    var avatar = new Entity();
+    var avatarImage = {
+        width: 40,
+        height: 61
+    };
+
+    var data = new createjs.SpriteSheet({
+        "images": [loader.getResult("avatar")],
+        "frames": {
+            "regX": 0,
+            "height": avatarImage.height,
+            "count": 16,
+            "regY": 0,
+            "width": avatarImage.width
+        },
+        // define two animations, run (loops, 1.5x speed) and jump (returns to run):
+        "animations": {
+            "run": [12, 15, "run", 0.5]
+        }
+    });
+
+    avatar.asset = new createjs.Sprite(data, "run");
+    avatar.asset.setTransform(0, 0, scale, scale);
+    avatar.asset.framerate = fpsHandler.fps;
+
+    avatar.setDimensions(new Vector(avatarImage.width, avatarImage.height));
+    avatar.setPosition(new Vector(100, groundLevel - avatarImage.height));
+
+    stage.addChild(avatar.asset);
+
+    entities.push(avatar);
 
     return avatar;
 };
